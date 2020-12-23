@@ -1,0 +1,72 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{bbm}
+\usepackage{amsfonts}
+\newcommand{\e}[1]{{\mathbb E}\left[ #1 \right]}
+
+\title{Advanced Machine Learning}
+\author{Mirko De Vita \\ Piersilvio De Bartolomeis}
+\date{Fall Semester 2020}
+
+\begin{document}
+
+\maketitle
+
+\section{Learning}
+
+\begin{enumerate}
+    \item \textbf{Supervised vs Unsupervised} \\Since learning involves an interaction between the learner and the environment, one can divide learning tasks according to the nature of that interaction.
+    \\Consider the task of learning to detect spam e-mail versus the task of anomaly detection. For the spam detection task consider a setting in which the learner receives training e-mails for which the label \textit{spam/not-spam} is provided. On the basis of such training the learner should figure out a rule for labeling a newly arriving e-mail message.
+    \\In contrast, for the task of anomaly detection, all the learner gets as training is a large body of e-mail messages (with no labels) and the learner's task is to to detect "unusual" messages.
+    \\Supervised learning describes a scenario in which the "experience", a training example, contains significant information (say, the \textit{spam/not-spam} labels) that is missing in the unseen "test examples" to which the learned expertise is to be applied.
+    \\In this setting, the acquired expertise is aimed to predict that missing information for the test data. In such cases, we can think of the environment as a teacher that "supervises" the learner by providing the extra information (labels).
+    \\In unsupervised learning,however, there is no distinction between training and test data. The learner process input data with the goal of coming up with some summary, or compressed version of that data. Clustering a data set into subsets of similar objects is a typical example of such task.
+    \\There is also an intermediate setting in which, while the training examples contain more information than the test examples, the learner is required to predict even more information for the test examples. For example, one may try to learn a value function that describes for each setting of a chess board the degree by which White's position is better than the Black's. Yet, the only information available to the learner at training time is positions that occurred throughout actual chess games, labeled by who eventually won that game. Such learning frameworks are mainly investigated under the title of \textit{reinforcement learning}.
+\end{enumerate}
+
+
+\section{The Statistical Learning Framework}
+
+\textbf{The learner's input:} In the basic statistical learning setting the learner has access to the following:
+\begin{itemize}
+    \item \textbf{Domain set:} An arbitrary set, $X$. This is the set of objects that we wish to label.
+    \\Usually, these domain points will be represented by a vector of \textit{features}.
+    \item \textbf{Label set:} For our current discussion, we will restrict the label set to be a two-element set, usually $\{0,1\}$ or $\{-1,1\}$.
+    \item \textbf{Training Data:} $S = ((x_1,y_1)...(x_n,y_n))$ is a finite sequence of pairs $X \times Y$: that is, a sequence of labeled domain points. This is the input that the learner has access to. We sometimes also refer to $S$ as the \textit{training set}.
+    \item \textbf{The learner's output:} The learner is requested to output a \textit{prediction} rule, $f(x) = f_\theta (x)$. This function is also called a \textit{predictor}, a \textit{hypothesis}, or a \textit{classifier}. The predictor can be used to predict the label of new domain points.
+    \item \textbf{Measure of success: } The loss function $Q$ measures the deviation between dependent variables $y$ and prediction $f(x)$.
+    \begin{equation*}
+        Q(y, f(x)) = \mathbbm{1}{y\neq f(x)}
+    \end{equation*}
+    \\This is the 0-1 loss used in \textit{classification}.
+\end{itemize}
+
+\section{Empirical Risk Minimization}
+\textbf{Empirical risk minimization (ERM)} is a principle in statistical learning theory which defines a family of learning algorithms and is used to give theoretical bounds on their performance. The core idea is that we cannot know exactly how well an algorithm will work in practice (the true "risk") because we don't know the true distribution of data that the algorithm will work on, but we can instead measure its performance on a known set of training data (the "empirical" risk).
+\begin{itemize}
+    \item \textbf{Conditional expected risk:}
+    \\Given the random variable $X$ the conditional expected risk is defined as:
+    \begin{equation*}
+        R(f, X) = \int_{Y} Q(Y, f(X))P(Y|X) \,dY
+    \end{equation*}
+    \item \textbf{Total expected risk:} For the random variables $X$, $Y$ is defined as:
+    \begin{equation*}
+        R(f) = {\mathbb E_X}[R(f, X)]= \int_{X} R(f, X)P(X) \,dX = \int_{Y}\int_{X} Q(Y, f(X))P(X, Y) \,dX \,dY
+    \end{equation*}
+    In general, the risk $R(f)$ cannot be computed because the distribution $P(X,Y)$ is unknown to the learning algorithm (this situation is referred to as agnostic learning). However, we can compute an approximation, called empirical risk.
+    \item \textbf{Empirical risk:} Usually the samples are split into training data and test data. Additional data is used to guide the estimator selection.
+    \\Test data cannot be used before the final estimator has been selected!
+    \begin{equation*}
+        Z^{train} = \{(x_1,y_1)...(x_n,y_n)\}
+    \end{equation*}
+    \begin{equation*}
+        Z^{test} = \{(x_{n + 1},y_{n + 1})...(x_{n + m},y_{n + m})\}
+    \end{equation*}
+    
+\end{itemize}
+
+\newpage
+
+
+\end{document}

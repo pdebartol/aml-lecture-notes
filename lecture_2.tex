@@ -1,0 +1,359 @@
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0.25 in}
+\setlength{\evensidemargin}{-0.25 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.5 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+\newcommand{\eqdef}{:\mathrel{\mathop=}}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+
+%
+% ADD PACKAGES here:
+%
+
+\usepackage{amsmath,amsfonts,graphicx,dsfont}
+
+%
+% The following commands set up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number.
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+\newcommand{\indep}{\raisebox{0.05em}{\rotatebox[origin=c]{90}{$\models$}}}
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[4]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf Advanced Machine Learning
+	\hfill Fall 2020} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { {\it  #3 \hfill  #4} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #2}{Lecture #1: #2}
+
+   {\bf Note}: {\it LaTeX template courtesy of UC Berkeley EECS dept.}
+
+   {\bf Disclaimer}: {\it These notes are adapted from ETH's Advanced Machine Learning Course and Statistical Machine Learning Notes 3, Justin Domke, UMASS.}
+   \vspace*{4mm}
+}
+%
+% Convention for citations is authors' initials followed by the year.
+% For example, to cite a paper by Leighton and Maggs you would type
+% \cite{LM89}, and to cite a paper by Strassen you would type \cite{S69}.
+% (To avoid bibliography problems, for now we redefine the \cite command.)
+% Also commands that create a suitable format for the reference list.
+\renewcommand{\cite}[1]{[#1]}
+\def\beginrefs{\begin{list}%
+        {[\arabic{equation}]}{\usecounter{equation}
+         \setlength{\leftmargin}{2.0truecm}\setlength{\labelsep}{0.4truecm}%
+         \setlength{\labelwidth}{1.6truecm}}}
+\def\endrefs{\end{list}}
+\def\bibentry#1{\item[\hbox{[#1]}]}
+
+%Use this command for a figure; it puts a figure in wherever you want it.
+%usage: \fig{NUMBER}{SPACE-IN-INCHES}{CAPTION}
+\newcommand{\fig}[3]{
+			\vspace{#2}
+			\begin{center}
+			Figure \thelecnum.#1:~#3
+			\end{center}
+	}
+% Use these for theorems, lemmas, proofs, etc.
+\newtheorem{theorem}{Theorem}[lecnum]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newenvironment{proof}{{\bf Proof:}}{\hfill\rule{2mm}{2mm}}
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+
+\newcommand\E{\mathbb{E}}
+\DeclareMathOperator*{\argmin}{arg\,min} 
+
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{2}{Representations, measurements, data types}{}{}
+%\footnotetext{These notes are partially based on those of Nigel Mansell.}
+
+% **** YOUR NOTES GO HERE:
+
+% Some general latex examples and examples making use of the
+% macros follow.  
+%**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
+%**** ARE NEVER READ BY ANYBODY.
+
+\section{Data Representation}
+
+One of the fundamental problems in Machine Learning is how a machine should represent an object/concept.\\
+Machine only understand numbers, so we need to find a way to condensate all the information about an object in a set of numbers (i.e a vector). Such representation can later be used to perform different tasks; whether we want to classify the object, generate new ones or do anything else.\\
+Choosing the wrong data representation can induce inappropriate similarity measures.
+
+\subsection{Definition of Structures}
+
+A statistical definition of good and poor structures is mandatory for rational pattern recognition.\\
+Multi-scale optimization yields efficient algorithms to detect good structures in data, but are the structures indeed in the data or are they explained by fluctuations?\\
+Without \textbf{validation}, any pattern recognition strategy is doomed to fail.
+
+\subsection{Definition of Data}
+
+\textbf{Measurements}: associations of numbers with physical quantities and natural phenomena by comparing an unknown quantity with a known quantity of the same kind.\\
+Our goal is to represent objects of interest and characterize them according to their typical patterns for detection, classification and abstraction.
+Measurements represent objects in a data space, e.g digits as objects and pixel intensities as measurements.
+
+\section{Feature Space}
+
+\textbf{Measurement space $X$:} the mathematical space in which the data are represented, e.g numerical ($X \in \mathbb{R}^d$), Boolean ($X \in \mathbb{B}$) or categorical ($X = \{1, ..., K\}$) features.\\
+Features are derived quantities or indirect observations which often significantly compress the information content of measurements.\\
+The selection of a specific feature space predetermines the metric to compare data, this choice is the first significant design decision in a machine learning system.
+
+\newpage
+
+\section{Learning Problems}
+
+Learning requires to infer a functional or statistical relationship between variables when we only observe noisy samples.
+Approximation and interpolation in function estimation are such procedures. \\
+The problem without additional assumptions is mathematically ill-defined since many different functions might be compatible with many observations. We, therefore, require that our inference has to "work" on future data.
+Mathematically, the expected quality of inference should be high and not necessarily the empirically observed quality.\medskip
+
+Applications in which the training data comprises examples of the input vectors along with their corresponding target vectors are known as \textbf{supervised learning} problems.\\
+Cases such as the digit recognition example, in which the aim is to assign each input vector to one of a finite numbers of discrete categories, are called \textbf{classification} problems.\\
+If the desired output consists of one or more continuous variables, then the task is called \textbf{regression}.\medskip
+
+In other pattern recognition problems, the training data consists of a set of input vectors $x$ without any corresponding target values. The goal in such \textbf{unsupervised learning} problems may be to discover groups of similar examples within the data, where it is called \textbf{clustering}, or to determine the distribution of data within the input space, known as \textbf{density estimation}, or to project the data from a high dimensional space down to two or three dimensions for the purpose of visualization (\textbf{dimension reduction}).\medskip
+
+Another task could be \textbf{data compression}, where a system predicts the posterior probabilities of a sequence given its entire history. This can be used for optimal data compression.\medskip
+
+Finally, the technique called \textbf{reinforcement learning} is concerned with the problem of finding suitable actions to take in a given situation in order to maximise a reward. Here, the learning algorithm is not given examples of optimal outputs, in contrast to supervised learning, but must instead discover them by a process of trial and error.
+
+\subsection{Supervised Learning}
+
+A teacher (oracle) provides the correct answer during training.\\
+Data are pairs of features and response variables $\{(x_1, y_1), ..., (x_n, y_n) : x_i \in X \subset \mathbb{R}^d, y_i \in  \mathbb{K}\}$ with:\\
+$\mathbb{K} = \{1,...,K\}$ for classification where $\mathbb{K}$ is an index set for the classes;\\
+$\mathbb{K} = [0, 1]^K$ is the space of assignments for probabilistic classification;\\
+$\mathbb{K} \subset \mathbb{R}$ for regression.\medskip
+
+\textbf{Problem}: The data are noise contaminated, e.g the response variable $y = f(x,w) + \eta$ depends on the function with parameters $w$ and Gaussian white noise $\eta$.\\
+\textbf{Question}: How can we infer a functional relationship $f(x, w)$ from data which are described by the statistical relationship $P(X = x, Y = y)$?\\
+Statistical learning theory provides the \textbf{answer}: define a function class $C = \{f(x, w): w \in W, x \in \mathbb{R}^d\}$ where $w$ indexes the function (hypothesis) class $C$. It turns out that the "complexity" of the function class $C$ is the essential concept to describe the difficulty of learning. If we have too few data and we work with a too complex function class then learning algorithms have a strong tendency to overfit, i.e to confuse/interpret noise as signal.
+
+\newpage
+
+\section{The Dilemma of Learning}
+
+What should we do about overfitting?
+\begin{itemize}
+    \item Minimize \textbf{expected} classification error.
+    \item Maximize generalisation.
+\end{itemize}
+
+What can we do about overfitting?
+\begin{itemize}
+    \item Minimize \textbf{empirical} classification error.
+    \item Maximize estimated empirical generalisation performance by cross-validation.
+\end{itemize}
+
+We search a function $f(x) \in C$ out of the hypothesis class/solution space $C$ such that:
+\begin{center}
+$f : X \rightarrow Y$\\
+$x \rightarrow y = f(x)$
+\end{center}
+Often we index the function $f(x) = f_\theta(x)$ by a parameter $\theta$.\\
+Given an input space $X$ with data $x \in X$ find an interpretation $c \in C$. $x$ is a random variable and $c$ is a random variable as well if it is calculated from $x$ by a procedure $\mathbb{A}$.\\
+We search for a posterior distribution $P(C | X)$.\\
+Special choice: $P(C | X) = \frac{\exp{(-\beta R(C, X))}}{\sum\limits_{\substack{c}} \exp{(-\beta R(C, X))}} $ 
+
+\subsection{Quality of the estimate}
+
+The \textbf{loss function} $L$ measures the deviation between dependent variables $y$ and  prediction $f(x)$:
+\begin{equation*}
+  L(f(x),y) =
+    \begin{cases}
+      (y - f(x))^2 & \text{quadratic loss (regression)}\\
+      \mathds{1}_{y \neq f(x)} & \text{0-1 loss (classification)}\\
+      \exp{(-\beta y f(x))} & \text{exponential loss (classification)}
+    \end{cases}       
+\end{equation*}
+
+\textbf{Conditional expected risk}:\\
+Given the random variable $X$ the conditional expected risk is defined as:
+\begin{center}
+    $R(f,x) = \int_y L(f(x), y)P(Y | X) dY$
+\end{center}
+\textbf{Expected true risk}:
+\begin{center}
+    $R_{true}(f,x) = \underset{p}{\mathbb{E}}[L(f(x), y)] = \int_x\int_y L(f(x), y)P(x, y) dx dy$
+\end{center}
+Where $p$ is the true distribution over the inputs $x$ and $y$. The risk measures how much, on average, it hurts to use $f$ as our prediction algorithm.
+\newpage
+This can be clarified by considering an example. Suppose we want to fit a function for predicting if it will rain or not. The input $x$ will be the sky: CLEAR, CLOUDY or MIXED.\\
+The output y will be either RAIN or NOPE. The loss function is now a function $L : \{\text{RAIN, NOPE}\}^2 \rightarrow \mathbb{R}$.\\
+Which loss function is appropriate? It depends on the priorities of the user. For example, we have $L$:
+\begin{center}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+ $Y_1$\textbackslash $Y_2$ & RAIN & NOPE \\ 
+ RAIN & 0 & 1 \\ 
+ NOPE & 25 & 0 \\ 
+ \hline
+\end{tabular}
+\end{center}
+Meaning that predicting NOPE instead of RAIN it is 25 times worse than predicting RAIN when it does not rain.\\
+Now suppose the distribution $p$ is given as follows:
+\begin{center}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+ $X$\textbackslash $Y$ & RAIN & NOPE \\ 
+ CLEAR & 0 & 1/4 \\ 
+ CLOUDY & 1/4 & 0 \\ 
+ MIXED & 1/6 & 1/3 \\ 
+ \hline
+\end{tabular}
+\end{center}
+Let's consider two possible predictors:
+\begin{equation*}
+    f_1(x) = \begin{cases}
+        \text{CLEAR NOPE} \\
+        \text{CLOUDY RAIN} \\
+        \text{MIXED NOPE} 
+    \end{cases}
+\end{equation*}
+\begin{equation*}
+    f_2(x) = \begin{cases}
+        \text{CLEAR NOPE} \\
+        \text{CLOUDY RAIN} \\
+        \text{MIXED RAIN} 
+    \end{cases}
+\end{equation*}
+If we use $L$, it is easy to calculate $R(f_1) = 1/6\cdot25$ and $R(f_2) = 1/3\cdot1$ and so $f_2$ has the lowest risk.\\
+So it sounds like the thing to do is picking $f$ to minimize the risk. Trouble is, that it is impossible.
+To calculate the risk, we would need to know the true distribution $p$. If we knew it, we would not be doing machine learning.\\
+Since the data comes from $p$, we should be able to get a reasonable approximation:
+\begin{center}
+    $\underset{p}{\mathbb{E}}[L(f(x), y)] \approx \hat{\mathbb{E}}[L(f(x), y)]$
+\end{center}
+The right hand side of the equation is called the \textbf{empirical risk}.
+\begin{center}
+    $R(f) = \hat{\mathbb{E}}[L(f(x), y)]$
+\end{center}
+Picking the function $f^*$ that minimizes it is known as \textbf{Empirical Risk Minimization}.
+\begin{equation*}
+    f^* = \argmin_{f \in C} R(f)
+\end{equation*}
+Our hope is that empirical risk minimization performs similarly to true risk minimization, i.e that:
+\begin{equation}
+    \argmin_{f \in C} R(f) \approx \argmin_{f \in C} R_{true}(f)
+\end{equation}
+\newpage
+How true is Eq. 2.1 in practice depends on four factors:
+\begin{itemize}
+    \item How much data we have. For any given function $f$ as we get more and more data we can expect that $R(f) \to R_{true}(f)$.
+    \item The true distribution $p$. Depending on how "complex" the true distribution is, more or less data may be necessary to get a good approximation of it.
+    \item The loss function $L$. If the loss function is very "weird" - giving extremely high loss in certain unlikely situations - this can lead to trouble.
+    \item The class of functions of $C$. Roughly speaking, if the size of $C$ is "large", and the functions in $C$ are "complex", this worsens the approximation, all else being equal.
+\end{itemize}
+So why not use a small set of "simple" functions? It is true, this will lead to empirical risk minimization approximating true risk minimization. However, it also worsens the value of the minimum of the true risk:
+\begin{equation*}
+    \argmin_{f \in C} R_{true}(f)
+\end{equation*}
+
+This phenomenon is called \textbf{Bias-Variance Trade-off}.\\
+When used in practice, it is usually necessary to perform some sort of model selection or regularization to make empirical risk minimization generalize well to new data.\medskip
+
+In fact, what usually happens is that the samples are split into training data and test data. Additional validation data is used to guide the estimator selection.\\
+Test data cannot be used before the final estimator has been selected.
+\begin{equation*}
+    Z^{train} = \{(x_1, y_1),...,(x_n, y_n)\}\\
+\end{equation*}
+\begin{equation*}
+    Z^{test} = \{(x_{n+1}, y_{n+1}),...,(x_{n+m}, y_{n+m})\}
+\end{equation*}
+We have the training error $\hat{R}(f, Z^{train}) = \frac{1}{n}\sum\limits_{i = 1}^{n}L(f^*(x_i), y_i)$ and its minimizer $f^* = \argmin_{f \in C} \hat{R}(f)$.\\
+The test error amounts to $\hat{R}(f, Z^{test}) = \frac{1}{m}\sum\limits_{i = n+1}^{m+n}L(f^*(x_i), y_i)$.\\
+When we use test data for validation, then estimator adaption introduces statistical dependencies between outcome of the learning process (estimator) and test data. This design flow yields a too optimistic estimate of the test error.\\
+Furthermore, it is important to \textbf{distinguish between test error and expected risk}:
+\begin{equation*}
+    \hat{R}(f, Z^{test}) \neq \underset{x}{\mathbb{E}}[R(f^*, X)]
+\end{equation*}
+What is the probability $P(|\hat{R}(f, Z^{test})-\underset{x}{\mathbb{E}}[R(f^*, X)]|> \epsilon)$?\\
+The test error empirically estimates the expected risk. To assess the quality of the estimate we should report mean and variance or another measure of deviation.
+
+\newpage
+
+\section{Taxonomy of Data}
+
+Pattern analysis requires to find structures in sets of object representations.\\
+We are given a object space $O$ and a measurement $X$ that maps an object set into a domain $\mathbb{K}$. Measurements provide information from reality to feed our modeling in more quantitative terms.
+\begin{equation*}
+    X : O^{(1)} \times ... \times O^{(R)} \rightarrow \mathbb{K}
+\end{equation*}
+\begin{equation*}
+    (o_1,...,o_R) \rightarrow X_{o_1,...,o_R}
+\end{equation*}
+\textbf{Examples:}
+\begin{itemize}
+    \item Feature Vectors: $X : O \rightarrow \mathbb{R}^d$, $o \rightarrow X _o$
+    \item Classification Data: $X : O \rightarrow \mathbb{R}^d \times \{1,...,k\} $, $o \rightarrow (X _o, Y_o)$
+    \item Regression Data: $X : O \rightarrow \mathbb{R}^d \times \mathbb{R}$, $o \rightarrow (X _o, Y_o)$
+    \item Proximity Data: $X: O \times O \rightarrow \mathbb{R}$, $(o_1,o_2) \rightarrow X_{o_1,o_2}$
+\end{itemize}
+\renewcommand{\theenumi}{\alph{enumi}}
+\begin{enumerate}
+    \item \textbf{Monadic Data}: $X : O \rightarrow \mathbb{R}^d$, $o \rightarrow X _o$
+    \\Monadic data characterize configurations or objects without reference to other configurations, e.g temperature and pressure are measured for each location in absolute terms.
+    \item \textbf{Diadic Data}: $X: O^{(1)} \times O^{(2)} \rightarrow \mathbb{R}$, $(o_1,o_2) \rightarrow X_{o_1,o_2}$
+    \item \textbf{Polyadic Data:} $X: O^{(1)} \times O^{(2)} \times O^{(3)} \rightarrow \mathbb{R}$, $(o_1,o_2,o_3) \rightarrow X_{o_1,o_2,o_3}$
+\end{enumerate}
+Choosing the correct representation of objects is important, because the choice reflects on the algorithm itself. Otherwise the model has to learn a wrong representation and try to adjust itself to wrong constraints.
+\subsection{Scales}
+\begin{enumerate}
+    \item \textbf{Nominal or Categorical Scale}: qualitative but without quantitative measurements, e.g \textit{binary scale} $X = \{0,1\}$.
+    \item \textbf{Ordinal Scale}: measurement values are meaningful only with respect to other measurements, i.e the rank order carries the information, not the numerical differences.
+    \item \textbf{Quantitative Scale}:
+    \renewcommand{\theenumii}{\roman{enumii}}
+    \begin{enumerate}
+        \item \textbf{Interval Scale}: the relation of numerical differences carries the information. Invariance w.r.t translation and scaling (e.g Fahrenheit scale).
+        \item \textbf{Ratio Scale}: zero value of the scale carries the information but not the measurement unit (e.g Kelvin scale).
+        \item \textbf{Absolute Scale}: absolute values are meaningful (e.g grades).
+    \end{enumerate}
+\end{enumerate}
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+ Scale Type & Transformation invariances \\ 
+ Nominal & $T = \{f : \mathbb{R} \rightarrow \mathbb{R} \:| f \: \text{bijective}\}$ \\ 
+ Ordinal & $T = \{f : \mathbb{R} \rightarrow \mathbb{R} \:| f(x_1) < f(x_2), \forall x_1 < x_2\}$ \\ 
+ Interval & $T = \{f : \mathbb{R} \rightarrow \mathbb{R} \:| f(x) = ax + c,  a \in \mathbb{R}^+, c \in \mathbb{R}\}$ \\ 
+ Ratio & $T = \{f : \mathbb{R} \rightarrow \mathbb{R} \:| f(x) = ax,  a \in \mathbb{R}^+\}$ \\
+ Absolute & $T = \{f : \mathbb{R} \rightarrow \mathbb{R} \:| f \: \text{is identity map}\}$ \\ 
+ \hline
+\end{tabular}
+\end{center}
+The cost function has to obey the invariants and if they are known in advance we can search for a better learning procedure.
+\section{Mathematical Spaces}
+\end{document}
