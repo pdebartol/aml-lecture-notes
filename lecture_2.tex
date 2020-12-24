@@ -14,8 +14,7 @@
 % ADD PACKAGES here:
 %
 
-\usepackage{amsmath,amsfonts,graphicx,dsfont}
-
+\usepackage{amsmath,amsfonts,graphicx,dsfont,amssymb}
 %
 % The following commands set up the lecnum (lecture number)
 % counter and make various numbering schemes work relative
@@ -55,7 +54,7 @@
 
    {\bf Note}: {\it LaTeX template courtesy of UC Berkeley EECS dept.}
 
-   {\bf Disclaimer}: {\it These notes are adapted from ETH's Advanced Machine Learning Course and Statistical Machine Learning Notes 3, Justin Domke, UMASS.}
+   {\bf Disclaimer}: {\it These notes are adapted from ETH's Advanced Machine Learning Course, All Of Statistics, Larry Wasserman, Springer and Statistical Machine Learning Notes 3, Justin Domke, UMASS.}
    \vspace*{4mm}
 }
 %
@@ -288,19 +287,19 @@ When used in practice, it is usually necessary to perform some sort of model sel
 In fact, what usually happens is that the samples are split into training data and test data. Additional validation data is used to guide the estimator selection.\\
 Test data cannot be used before the final estimator has been selected.
 \begin{equation*}
-    Z^{train} = \{(x_1, y_1),...,(x_n, y_n)\}\\
+    \mathcal{Z}^{train} = \{(x_1, y_1),...,(x_n, y_n)\}\\
 \end{equation*}
 \begin{equation*}
-    Z^{test} = \{(x_{n+1}, y_{n+1}),...,(x_{n+m}, y_{n+m})\}
+    \mathcal{Z}^{test} = \{(x_{n+1}, y_{n+1}),...,(x_{n+m}, y_{n+m})\}
 \end{equation*}
-We have the training error $\hat{R}(f, Z^{train}) = \frac{1}{n}\sum\limits_{i = 1}^{n}L(f^*(x_i), y_i)$ and its minimizer $f^* = \argmin_{f \in C} \hat{R}(f)$.\\
-The test error amounts to $\hat{R}(f, Z^{test}) = \frac{1}{m}\sum\limits_{i = n+1}^{m+n}L(f^*(x_i), y_i)$.\\
+We have the training error $\hat{R}(f, \mathcal{Z}^{train}) = \frac{1}{n}\sum\limits_{i = 1}^{n}L(f^*(x_i), y_i)$ and its minimizer $f^* = \argmin_{f \in C} \hat{R}(f)$.\\
+The test error amounts to $\hat{R}(f, \mathcal{Z}^{test}) = \frac{1}{m}\sum\limits_{i = n+1}^{m+n}L(f^*(x_i), y_i)$.\\
 When we use test data for validation, then estimator adaption introduces statistical dependencies between outcome of the learning process (estimator) and test data. This design flow yields a too optimistic estimate of the test error.\\
 Furthermore, it is important to \textbf{distinguish between test error and expected risk}:
 \begin{equation*}
-    \hat{R}(f, Z^{test}) \neq \underset{x}{\mathbb{E}}[R(f^*, X)]
+    \hat{R}(f, \mathcal{Z}^{test}) \neq \underset{x}{\mathbb{E}}[R(f^*, X)]
 \end{equation*}
-What is the probability $P(|\hat{R}(f, Z^{test})-\underset{x}{\mathbb{E}}[R(f^*, X)]|> \epsilon)$?\\
+What is the probability $P(|\hat{R}(f, \mathcal{Z}^{test})-\underset{x}{\mathbb{E}}[R(f^*, X)]|> \epsilon)$?\\
 The test error empirically estimates the expected risk. To assess the quality of the estimate we should report mean and variance or another measure of deviation.
 
 \newpage
@@ -356,4 +355,84 @@ Choosing the correct representation of objects is important, because the choice 
 \end{center}
 The cost function has to obey the invariants and if they are known in advance we can search for a better learning procedure.
 \section{Mathematical Spaces}
+\begin{definition} \textbf{Topological Space} \\
+Let $X$ be a non-empty set and $\Im$ a collection of subsets of $X$ such that:
+\renewcommand{\theenumi}{\Roman{enumi}}
+\begin{enumerate}
+    \item $X \in \Im$;
+    \item $\emptyset \in \Im$;
+    \item If $O_1,...,O_n \in \Im$, then $O_1 \cap... \cap O_n \in \Im$;
+    \item If for each $\alpha \in I$, $O_\alpha \in \Im$, then $\cup_{\alpha \in I} \in \Im$;
+\end{enumerate}
+The pair of objects $(X, \Im)$ is called a topological space.
+\end{definition}
+Topological spaces only describe the closeness/neighborhood of objects but they do not model any quantitative differences (distances) between the "degrees of closeness". The concept of a topological space is one of the most fruitful concepts of modern mathematics. It is the proper setting for discussion based on considerations of continuity.\\
+Topological spaces allow us to introduce the concept of a neighborhood and to define \textit{neighborhood spaces} in a natural way.
+\begin{definition} \textbf{Metric Space}
+A pair of objects $(X, d)$ consisting of a non-empty set $X$ and a function $d: X \times X \rightarrow \mathbb{R}$ is called a metric space provided that:
+\renewcommand{\theenumi}{\Roman{enumi}}
+\begin{enumerate}
+    \item Positivity: $d(x,y) \geq 0, \: \forall x, y \in X$;
+    \item Uniqueness: $d(x,y) = 0 \Leftrightarrow x = y$, \: $\forall x,y \in X$;
+    \item Simmetry: $d(x,y) = d(y,x), \: \forall x, y \in X$;
+    \item $\Delta$ inequality: $d(x,z) \leq d(x,y) + d(y,z), \: \forall x, y, z \in X$;
+\end{enumerate}
+The function $d$ is called a distance function or metric on $X$ and the set $X$ is called the underlying set.
+\end{definition}
+\textbf{Example:} $(\mathbb{R}, d)$ is a metric space, where $d$ is the function defined by $d(a,b) = |a-b| \forall a,b \in \mathbb{R}$.
+\begin{definition} \textbf{Scalar Product}
+Let $X$ be a non-empty set and $\mathcal{V} = (X,+,\cdot)$ a vector space. A function $\phi : X \times X \rightarrow \mathbb{R}$ which assigns two vectors $\boldsymbol{x}, \boldsymbol{y} \in \mathcal{V}$ a real number is called \textbf{scalar product} on $\mathcal{V}$ if the following properties hold:
+\renewcommand{\theenumi}{\Roman{enumi}}
+\begin{enumerate}
+    \item Distributivity: $\phi(\boldsymbol{x_1} + \boldsymbol{x_2}, \boldsymbol{y}) = \phi(\boldsymbol{x_1}, \boldsymbol{y}) + \phi(\boldsymbol{x_2}, \boldsymbol{y})$;
+    \item Commutativity: $\phi(\boldsymbol{x}, \boldsymbol{y}) = \phi(\boldsymbol{y}, \boldsymbol{x})$;
+    \item Homogeneity: $\phi(\alpha\boldsymbol{x}, \boldsymbol{y}) = \alpha\phi(\boldsymbol{x}, \boldsymbol{y}), \: \forall \alpha \in \mathbb{R}$;
+    \item Positive definiteness: $\phi(\boldsymbol{x}, \boldsymbol{x}) > 0, \: \forall \boldsymbol{x} \neq 0$;
+\end{enumerate}
+\end{definition}
+A vector space with such a scalar product is called \textbf{Euclidean vector space}. The scalar product defines the norm $\norm{\boldsymbol{x}} \triangleq \sqrt{\phi(\boldsymbol{x},\boldsymbol{x})}$.\medskip
+
+Every element of a metric space corresponds to an element in a metrizable space.\\
+From a machine learning point of view we have to answer the question how precisely we can actually gather metric information rather than topological information in an application scenario. Such an analysis then suggests the appropriate space to model the structures in the data.
+\subsection{Probability Spaces}
+\begin{definition} \textbf{Elementary event}\\
+$\omega_1,...,\omega_n$ are samples points
+\end{definition}
+\begin{definition} \textbf{Sample Space}\\
+$\Omega = \{\omega_1,...,\omega_n\}$\\
+The sample space $\Omega$ is the set of possible outcomes of an experiment. Points $\omega$ in $\Omega$ are called sample outcomes, realizations, or elements. Subsets of $\Omega$ are called Events.
+\end{definition}
+\textbf{Example}: If we toss a coin twice then $\Omega = \text{\{HH,HT,TH,TT\}} $ . The event that the first toss is heads is $A = \text{\{HH,HT\}}$.
+\begin{definition} \textbf{Family of Sets}\\
+An event $A$ of an experiment is a set of elementary events with the following conditions:
+\begin{itemize}
+    \item $A \subset \Omega$
+    \item $\omega \in A \vee \omega \not\in A$
+\end{itemize}
+\end{definition}
+\begin{definition} \textbf{Algebra of events}\\
+Let $A, B$ be events. $\mathcal{A}$ is an algebra of events, i.e, a set of subsets $A \subset \Omega$, for which holds:
+\begin{itemize}
+    \item $\Omega \in \mathcal{A}$
+    \item if $A \in \mathcal{A} \wedge B \in \mathcal{A}$, then $A \cup B \in \mathcal{A} \wedge A \setminus B \in \mathcal{A}$
+\end{itemize}
+\end{definition}
+\begin{definition} \textbf{Probability of events}\\
+A function $\mathbb{P}$ that assigns a real number $\mathbb{P}(A)$ to each event $A$ is a \textbf{probability distribution} or a \textbf{probability measure} if it satisfies the following three axioms:
+\begin{itemize}
+    \item \textbf{Axiom 1}: $\mathbb{P}(A) \geq 0$ for every $A$
+    \item \textbf{Axiom 2}: $\mathbb{P}(\Omega) = 1$
+    \item \textbf{Axiom 3}: If $A_1, A_2,...$ are disjoint then:
+    \begin{equation*}
+        \mathbb{P}(\bigcup\limits_{i=1}^{\infty} A_i) = \sum\limits_{i=1}^{\infty} \mathbb{P}(A_i)
+    \end{equation*}
+\end{itemize}
+\end{definition}
+\begin{definition} \textbf{Probability model}\\
+A probability model or a probability space is a triple
+\begin{equation*}
+    (\Omega, \mathcal{A}, \mathbb{P})
+\end{equation*}
+with the sample set $\Omega = \{\omega_1,...,\omega_n\}$ the event algebra $\mathcal{A}$ and the probabilities $\mathcal{P} = \{\mathbb{P}(A) | A \in \mathcal{A}\}$.
+\end{definition}
 \end{document}
