@@ -117,5 +117,19 @@
 \subsection{Bayesian view}
 Both observations (feature vector $\boldsymbol{X}$ and output $\boldsymbol{Y}$) and the parameters $\boldsymbol{\theta}$ of the regression model are random variables.\\
 Bayesian treatment of linear regression avoids over-fitting and also leads to automatic methods of determining model complexity using the training data alone. It makes predictions using all possible parameters, weighted by their posterior probability.\\
-Since the likelihood function $\mathbb{P}(\boldsymbol{Y|\boldsymbol{\theta}) = }$ is the exponential of a quadratic function, the corresponding conjugate prior is defined by
+Since the likelihood function $\mathbb{P}(\boldsymbol{Y}|\boldsymbol{X},\boldsymbol{\theta}) = \mathcal{N}(\boldsymbol{X}\boldsymbol{\theta}, \sigma^2\mathds{1})$ is the exponential of a quadratic function, the corresponding conjugate prior is defined by $\mathbb{P}(\boldsymbol{\theta}) = \mathcal{N}(0,\Lambda^{-1})$.\\
+(N.B Assuming $\Lambda$ and $\sigma^2$ as fixed is a big assumption).\medskip
+
+Now we compute the posterior distribution, which is proportional to the product of the likelihood function and the prior.
+\begin{equation*}
+    \mathbb{P}(\boldsymbol{\theta}| \boldsymbol{X}, \boldsymbol{Y}) \propto \mathbb{P}(\boldsymbol{Y}|\boldsymbol{X},\boldsymbol{\theta}) \mathbb{P}(\boldsymbol{\theta})
+\end{equation*}
+\begin{equation*}
+\begin{aligned}
+    \log\mathbb{P}(\boldsymbol{\theta}| \boldsymbol{X}, \boldsymbol{Y}) &\propto -\frac{1}{2}\sigma^2(\boldsymbol{Y} - \boldsymbol{X}\boldsymbol{\theta})^\intercal(\boldsymbol{Y} - \boldsymbol{X}\boldsymbol{\theta}) - \frac{1}{2}\boldsymbol{\theta}^\intercal\Lambda\boldsymbol{\theta} + const\\
+    &\propto -\frac{1}{2}\boldsymbol{\theta}^\intercal(\sigma^2\boldsymbol{X}^\intercal\boldsymbol{X} + \Lambda)\boldsymbol{\theta} + \boldsymbol{\theta}^\intercal(\sigma^2\boldsymbol{X}^\intercal\boldsymbol{Y}) + const
+\end{aligned}
+\end{equation*}
+By completing the square we note that:
+
 \end{document}
