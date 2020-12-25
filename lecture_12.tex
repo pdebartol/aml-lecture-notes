@@ -9,6 +9,7 @@
 \setlength{\parskip}{0.1 in}
 \newcommand{\eqdef}{:\mathrel{\mathop=}}
 \newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\def\Inf{\operatornamewithlimits{inf\vphantom{p}}}
 
 %
 % ADD PACKAGES here:
@@ -217,6 +218,58 @@ In particular, if we want
 this probability to be smaller than some $\delta > 0$, it would suffice to let\\ $n > \dfrac{1}{\epsilon} \big(\log{|\mathcal{C}|}+  log(1/\delta) \big)$.
 \end{proof}
 
+\section{Vapnik-Chervonenkis Inequality}
+
+Theorem 12.4 made two restrictive assumptions:
+\begin{itemize}
+    \item First, there exists a perfect hypothesis (realizability). What happens when the
+problem is not realizable (all hypotheses make some error)? 
+\item Second, the hypothesis class is finite. What happens when the number of hypotheses is infinite? We can’t just apply a union bound any more. To answer
+this, we need to have more suitable ways of measuring the “size” of a set other
+than cardinality. 
+\end{itemize}
+
+Breaking free of these restrictive assumptions, we will show how bounding expected
+risk can be reduced to one of uniform convergence. Recall that our goal is to bound
+the excess risk, the amount by which ERM’s (empirical-risk-minimizer) expected risk exceeds the lowest possible
+expected risk:
+$$\mathbb{P}[\mathcal{R}(\hat{c})- \mathcal{R}(c^*)] \leq \delta$$
+
+\begin{theorem} The following bound holds:\\ \\
+$\mathbb{P}\Big[\mathcal{R}(\hat{c}) - \inf_{c \in \mathcal{C}}{\mathcal{R}(c)} > \epsilon \Big] \leq \mathbb{P}\Big[ \sup_{c \in  \mathcal{C}}{|\mathcal{R}(c)- \mathcal{\hat{R}}_{n}(c) | > \epsilon/2} \Big]$
+\end{theorem}
+
+\begin{proof}
+$$\mathcal{R}(\hat{c})- \inf_{c \in \mathcal{C}}{\mathcal{R}(c)} \leq \mathcal{R}(\hat{c})- \mathcal{\hat{R}}_{n}(\hat{c})+
+\mathcal{\hat{R}}_{n}(\hat{c}) - \mathcal{R}(c^*)$$
+$$\leq \sup_{c \in  \mathcal{C}}{|\mathcal{R}(c)- \mathcal{\hat{R}}_{n}(c)|} + \sup_{c \in  \mathcal{C}}{|\mathcal{R}(c)- \mathcal{\hat{R}}_{n}(c) |}$$
+$$\leq 2\sup_{c \in  \mathcal{C}}{|\mathcal{R}(c)- \mathcal{\hat{R}}_{n}(c)|}$$
+\end{proof}
+
+On the LHS is a statement about excess risk, and on the RHS is a statement about
+uniform convergence. The RHS is the probability of the event that the largest difference
+between the empirical and expected risk is at least $\epsilon/2$.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\textwidth]{img/erm.png}
+\caption{In the worst case scenario pointwise convergence is not enough for the ERM algorithm to work. In Figure, $\mathcal{\hat{R}}_{n}(c)$ is  converging point-wise to $\mathcal{R}(c)$; however, since the convergence is not uniform, we have some $c$'s that do not converge for the current value of $n$ and cause the deviation in Figure. In this case, the ERM algorithm will pick the $\hat{c}$ that deviates the most $\mathcal{R}(c)$  thus, getting further and further away from the best classifier $c^*$.}
+\end{figure}
+
+But why do we need \textbf{uniform convergence}?\\ 
+Overfitting the data implies that $\mathcal{\hat{R}}_{n}(c)$ and $\mathcal{R}(c)$ are very different, even if $\mathcal{\hat{R}}_{n}(c)$ is an unbiased
+estimator of $\mathcal{R}(c)$!
+Why will this happen? $\mathcal{\hat{R}}_{n}(c)$ is just the sample-average version of $\mathcal{R}(c)$, right? Is this contradicting the law
+of large number that $\mathcal{\hat{R}}_{n}(c)$ converges to $\mathcal{R}(c)$?\\
+It is true that $\mathcal{\hat{R}}_{n}(c)$ is an unbiased estimator of $\mathcal{R}(c)$ and yes indeed the law of large number is applicable
+in this case. But a key requirement for using the law of large number is that we assume $c$ is fixed. Namely,
+if the classifier $c$ is fixed, then the law of large number guarantees that the empirical risk $\mathcal{\hat{R}}_{n}(c)$ converges
+to the true risk function $\mathcal{R}(c)$.
+However, when we are finding the best classifier, we are consider many many many possible classifiers $c$.
+Although for a given classifier $c$ the law of large number works, it may not work when we consider many
+classifiers. The empirical risk minimization works if:
+$$\sup_{c \in \mathcal{C}}{|\mathcal{R}(c) - \mathcal{\hat{R}}_{n}(c)|}  \overset{p}{\to} 0$$
+
+Namely, the convergence is uniform for all classifiers in the collection that we are considering.
 
 
-\end{document}accuracy
+\end{document}
