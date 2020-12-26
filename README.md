@@ -2,7 +2,7 @@
 
 [@pierobartolo](https://github.com/pierobartolo) and [@MirkoDeVita98](https://github.com/MirkoDeVita98) co-authored these lectures notes for the Advanced Machine Learning course at ETH Zürich.
 
-##Access
+## Access
 To pull the notes to your local computer you must first `clone` the repository.
 In the terminal, navigate to the root directory where you'd like the notes to
 be located and enter:
