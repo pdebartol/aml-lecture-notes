@@ -113,7 +113,7 @@ We now turn our attention to parametric models, that is, models of the form:
 \begin{equation*}
     \mathfrak{F} = \{f(x; \theta) : \theta \in \Theta\}
 \end{equation*}
-where the $\theta \subset \mathbb{R}^k$ is the parameter space and $\theta = (\theta_1,...,\theta_k)$ is the parameter. The problem of inference then reduces to the problem of estimating the parameter $\theta$.\\
+where the $\theta \subset \mathbb{R}^k$ is the parameter space and $\theta = (\theta_1,...,\theta_k)$ is the parameter. The problem of inference then reduces to the problem of estimating the parameter $\theta$. \\
 Often, we are only interested in some function $T(\theta)$. For example, if $X \sim \mathcal{N}(\mu, \sigma^2)$ then the parameter is $\theta = (\mu, \sigma)$. If our goal is to estimate $\mu$ then $\mu = T(\theta)$ is called the parameter of interest and $\sigma$ is called a nuisance parameter.
 
 \subsection{Maximum Likelihood}
@@ -124,13 +124,13 @@ The \textbf{likelihood function} is defined by:
 \begin{equation*}
     \mathcal{L}_n(\theta) = \prod\limits_{i = 1}^{n}f(x_i; \theta)
 \end{equation*}
-The \textbf{log-likelihood function} is defined by $l_n(\theta) = \log\mathcal{L}_n(\theta)$.
+The \textbf{log-likelihood function} is defined by $\ell_n(\theta) = \log\mathcal{L}_n(\theta)$.
 \end{definition}
 The likelihood function is just the joint density of the data, except that we treat it is a function of the parameter $\theta$. Thus,  $\mathcal{L}_n(\theta) : \Theta \to [0, \infty)$. The likelihood function is not a density function: in general, it is not true that $\mathcal{L}_n(\theta)$ integrates to 1 (with respect to $\theta$).
 \begin{definition}
-The \textbf{maximum likelihood estimator} MLE, denoted by $\hat{\theta_n}$, is the value of $\theta$ that maximizes $\mathcal{L}_n(\theta)$.
+The \textbf{maximum likelihood estimator} MLE, denoted by $\hat{\theta}_n$, is the value of $\theta$ that maximizes $\mathcal{L}_n(\theta)$.
 \end{definition}
-The maximum of $l_n(\theta)$ occurs at the same place as the maximum of $\mathcal{L}_n(\theta)$, so maximizing the log-likelihood leads to the same answer as maximizing the likelihood. Often, it is easier to work with the log-likelihood.
+The maximum of $\ell_n(\theta)$ occurs at the same place as the maximum of $\mathcal{L}_n(\theta)$, so maximizing the log-likelihood leads to the same result as maximizing the likelihood. Often, it is easier to work with the log-likelihood.
 \begin{claim}
 If we multiply $\mathcal{L}_n(\theta)$ by any positive constant $c$ (not depending on $\theta$) then this will not change the MLE. Hence, we shall often drop constants in the likelihood function.
 \end{claim}
@@ -156,14 +156,65 @@ Solving the equations:
 we conclude that $\hat{\mu} = \bar{X}$ and $\hat{\sigma} = S$. It can be verified that these are indeed global maxima of the likelihood.
 \end{example}
 \subsection{Properties of Maximum Likelihood Estimators}
-Under certain conditions on the model, the maximum likelihood estimator $\hat{\theta_n}$ possesses many properties that make it an appealing choice of estimator. The main properties of the MLE are:
+Under certain conditions on the model, the maximum likelihood estimator $\hat{\theta}_n$ possesses many properties that make it an appealing choice of estimator. The main properties of the MLE are:
 \begin{enumerate}
-    \item The MLE is \textbf{consistent}: $\hat{\theta_n} \overset{P}{\to} \theta^*$ where $\theta^*$ denotes the true value of the parameter $\theta$;
-    \item The MLE is \textbf{equivariant}: if $\hat{\theta_n}$ is the MLE of $\theta$ then $g(\hat{\theta_n})$ is the MLE of $g(\theta)$;
+    \item The MLE is \textbf{consistent}: $\hat{\theta}_n \overset{P}{\to} \theta^*$ where $\theta^*$ denotes the true value of the parameter $\theta$;
+    \item The MLE is \textbf{equivariant}: if $\hat{\theta}_n$ is the MLE of $\theta$ then $g(\hat{\theta}_n)$ is the MLE of $g(\theta)$;
     \item  The MLE is \textbf{asymptotically Normal}: $(\hat{\theta} - \theta^* / \hat{\text{se}}) \sim \mathcal{N}(0, 1)$; also, the
 estimated standard error $\hat{\text{se}}$ can often be computed analytically;
-    \item The MLE is \textbf{asymptotically optimal} or \textbf{efficient}: roughly, this means that among all well-behaved estimators, the MLE has the smallest variance, at least for large samples;
-    \item The MLE is approximately the Bayes estimator. 
+    \item The MLE is \textbf{asymptotically optimal} or \textbf{efficient}: roughly, this means that among all well-behaved estimators, the MLE has the smallest variance, at least for large samples. That is, $\hat{\theta}_n$ minimizes $\mathbb{E}\big[ (\hat{\theta}_n -\theta^*)^2\big]$ as  $n \to \infty$;
+    \item The MLE is approximately the Bayes estimator.  
 \end{enumerate}
-The properties we discuss only hold if the model satisfies certain regularity conditions. These are essentially smoothness conditions on $f(x; \theta)$ and we assume that they hold.
+The properties we discuss only hold if the model satisfies certain regularity conditions. These are essentially smoothness conditions on $f(x; \theta)$, unless otherwise stated we shall tacitly assume that these conditions hold.
+
+\subsection{Understanding Asymptotic efficiency}
+The expected square error is a measure for quantifying how good an estimator $\hat{\theta}$ is:
+$$\mathbb{E}\big[ (\hat{\theta}- \theta_0)^2\big]$$
+
+The Rao-Cramer bound shows that there does not exists an estimator that reaches $\mathbb{E}\big[ (\hat{\theta}- \theta_0)^2\big] = 0$
+
+\begin{theorem}For any  estimator $\hat{\theta}$ of $\theta$ it holds that:\\\\
+$\mathbb{E}_{x|\theta}\big[ (\hat{\theta} - \theta)^2\big] \geq \dfrac{\big(\dfrac{\partial}{\partial \theta} b_{\hat{\theta}} + 1 \big)^2}{\mathbb{E}_{x|\theta}\big[ \Lambda^2\big]} + b_{\hat{\theta}}^2$
+\end{theorem}
+
+\begin{proof} 
+$$\Lambda = \dfrac{\partial}{\partial{\theta}} \log{p(x|\theta)}= \dfrac{1}{p(x|\theta)} \dfrac{\partial}{\partial{\theta}} p(x|\theta)$$
+
+$$\mathbb{E}_{x|\theta}[\Lambda] = \int_{x} p(x|\theta) \Lambda \; dx= \int_{x} \dfrac{\partial}{\partial{\theta}} p(x|\theta) dx = \dfrac{\partial}{\partial{\theta}}\overbrace{\int_{x} p(x|\theta)dx}^{=1} = 0$$
+
+$$\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}]= \int_{x} p(x|\theta) \Lambda \hat{\theta} \; dx = \int_{x} \dfrac{\partial}{\partial{\theta}} p(x|\theta) \hat{\theta} \; dx
+= \dfrac{\partial}{\partial{\theta}} \int_{x} p(x|\theta) \hat{\theta} \; dx = \dfrac{\partial}{\partial{\theta}} \mathbb{E}_{x|\theta}[\hat{\theta}] = \dfrac{\partial}{\partial{\theta}} (\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta) + 1 =\dfrac{\partial}{\partial{\theta}} b_{\hat{\theta}}+1 $$
+
+Consider the cross-correlation between $\Lambda$ and $\hat{\theta}$:
+$$\Big(\mathbb{E}_{x|\theta}\big[ (\Lambda - \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0}) (\hat{\theta} - \mathbb{E}_{x|\theta}[\hat{\theta}\big] \Big)^2 = \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] - \mathbb{E}_{x|\theta}\big[ \Lambda \mathbb{E}_{x|\theta}[\hat{\theta}]  
+\big] \Big)^2 = \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] -  \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0} \mathbb{E}_{x|\theta}[\hat{\theta}
+\big] \Big)^2 =  \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] \Big)^2$$
+
+Now, let's consider Cauchy-Schwarz inequality i.e. $\big(\mathbb{E}[xy]\big)^2 \leq \mathbb{E}[x^2]\mathbb{E}[y^2]$ applied to the cross-correlation:
+$$\Big(\mathbb{E}_{x|\theta}\big[ (\Lambda - \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0}) (\hat{\theta} - \mathbb{E}_{x|\theta}[\hat{\theta}\big] \Big)^2 \leq \mathbb{E}_{x|\theta}[\Lambda^2]\; \mathbb{E}_{x|\theta}\big[(\hat{\theta} - \mathbb{E}_{x|\theta}[\hat{\theta}])^2\big] = \mathbb{E}_{x|\theta}[\Lambda^2]\; \mathbb{E}_{x|\theta}\big[\big((\hat{\theta} - \theta) -(\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta)\big)^2\big] $$ 
+$$ =  \mathbb{E}_{x|\theta}[\Lambda^2]\; \mathbb{E}_{x|\theta}\big[(\hat{\theta} - \theta)^2 + (\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta)^2 -2 (\hat{\theta}-\theta)(\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta)\big]$$ $$ =  \mathbb{E}_{x|\theta}[\Lambda^2]\; \big \{\mathbb{E}_{x|\theta}\big[(\hat{\theta} - \theta)^2 \big] + \overbrace{\mathbb{E}_{x|\theta} \big[(\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta)^2 -2 (\hat{\theta}-\theta)(\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta)\big]}^{-b_{\hat{\theta}}^2} \big \}  = \mathbb{E}_{x|\theta}[\Lambda^2]\; \big\{\mathbb{E}_{x|\theta}\big[(\hat{\theta} - \theta)^2\big]- b_{\hat{\theta}}^2 \big\}$$ 
+
+It's easy to verify that $\mathbb{E}_{x|\theta} \big[(\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta)^2 -2 (\hat{\theta}-\theta)(\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta)\big] = -b_{\hat{\theta}}^2$:
+
+$$\mathbb{E}_{x|\theta}\Big[ \mathbb{E}_{x|\theta}^2[\hat{\theta}] + \theta^2 \cancel{-2 \theta \mathbb{E}_{x|\theta}[\hat{\theta}]} -2 \hat{\theta} \mathbb{E}_{x|\theta}[\hat{\theta}]  +2\hat{\theta}\theta + \cancel{2 \theta \mathbb{E}_{x|\theta}[\hat{\theta}}] - 2 \theta^2
+\Big] $$ $$=\mathbb{E}^2_{x|\theta}[\hat{\theta}] + \mathbb{E}_{x|\theta}[\theta^2] -2 \mathbb{E}^2_{x|\theta}[\hat{\theta}] +2 \theta \mathbb{E}_{x|\theta}[\hat{\theta}] -2 \mathbb{E}_{x|\theta}[\theta^2]$$$$ =  - \mathbb{E}^2_{x|\theta}[\hat{\theta}] - \mathbb{E}_{x|\theta}[\theta^2] +2 \theta \mathbb{E}_{x|\theta}[\hat{\theta}] = - \mathbb{E}^2_{x|\theta}[\hat{\theta}] -\theta^2 +2 \theta \mathbb{E}_{x|\theta}[\hat{\theta}] = - \big( \mathbb{E}_{x|\theta}[\hat{\theta}]  - \theta \big )^2 = - b_{\hat{\theta}}^2 $$
+
+Finally, from the inequality proved earlier we know that:
+
+$$\big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}]\big)^2 = \big( \dfrac{\partial}{\partial{\theta}} b_{\hat{\theta}}+1\big)^2 \leq \mathbb{E}_{x|\theta}[\Lambda^2]\; \mathbb{E}_{x|\theta}\big[(\hat{\theta} - \theta)^2 - b_{\hat{\theta}}^2\big]$$
+It follows that:
+$$\mathbb{E}_{x|\theta}\big[ (\hat{\theta} - \theta)^2\big] \geq \dfrac{\big(\dfrac{\partial}{\partial \theta} b_{\hat{\theta}} + 1 \big)^2}{\mathbb{E}_{x|\theta}\big[ \Lambda^2\big]} + b_{\hat{\theta}}^2$$
+\end{proof}
+
+\subsection{Stein Estimator}
+For finite samples, the maximum-likelihood estimator is not necessarily efficient.\\ Consider a multivariate random variable with distribution $\mathcal{N}(\theta_0,\sigma^2I)$ with range $\mathbb{R}^d$ and $d \geq 3$.
+If we sample a single point $y$ from this distribution then the Stein Estimator is:
+
+$$\hat{\theta}_{JS} := \Big(1 - \dfrac{(d-2)\sigma^2}{||y||^2} \Big) y$$
+
+It is possible to prove that the Stein Estimator is better than the maximum-likelihood estimator for any $\theta_0$.  That is:
+$$
+\mathbb{E}\Big[ (\hat{\theta}_{JS}- \theta_0)^2\Big] \leq \mathbb{E}\Big[ (\hat{\theta}_{ML}- \theta_0)^2\Big] \; \; \text{for any} \; \theta_0 
+$$
+Moreover, the inequality is strict for some values of $\theta_0$.
 \end{document}
