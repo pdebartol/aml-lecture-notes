@@ -151,7 +151,7 @@ which can be verified by writing $\sum\limits_i(X_i - \mu)^2 = \sum\limits_i(X_i
 \end{equation*}
 Solving the equations:
 \begin{equation*}
-\frac{\partial l(\mu, \sigma)}{\partial\mu} \hspace{10pt} \text{and} \hspace{10pt} \frac{\partial l(\mu, \sigma)}{\partial\sigma},
+\frac{\partial l(\mu, \sigma)}{\partial\mu} = 0 \hspace{10pt} \text{and} \hspace{10pt} \frac{\partial l(\mu, \sigma)}{\partial\sigma} = 0,
 \end{equation*}
 we conclude that $\hat{\mu} = \bar{X}$ and $\hat{\sigma} = S$. It can be verified that these are indeed global maxima of the likelihood.
 \end{example}
@@ -173,12 +173,15 @@ $$\mathbb{E}\big[ (\hat{\theta}- \theta_0)^2\big]$$
 
 The Rao-Cramer bound shows that there does not exists an estimator that reaches $\mathbb{E}\big[ (\hat{\theta}- \theta_0)^2\big] = 0$
 
-\begin{theorem}For any  estimator $\hat{\theta}$ of $\theta$ it holds that:\\\\
-$\mathbb{E}_{x|\theta}\big[ (\hat{\theta} - \theta)^2\big] \geq \dfrac{\big(\dfrac{\partial}{\partial \theta} b_{\hat{\theta}} + 1 \big)^2}{\mathbb{E}_{x|\theta}\big[ \Lambda^2\big]} + b_{\hat{\theta}}^2$
+\begin{theorem}For any  estimator $\hat{\theta}$ of $\theta$ it holds that:\medskip
+
+$\mathbb{E}_{x|\theta}\big[ (\hat{\theta} - \theta)^2\big] \geq \dfrac{\big(\dfrac{\partial}{\partial \theta} b_{\hat{\theta}} + 1 \big)^2}{\mathbb{E}_{x|\theta}\big[ \Lambda^2\big]} + b_{\hat{\theta}}^2$\medskip
+
+Where:
+$$\Lambda = \dfrac{\partial}{\partial{\theta}} \log{p(x|\theta)}= \dfrac{1}{p(x|\theta)} \dfrac{\partial}{\partial{\theta}} p(x|\theta) \hspace{10pt} \text{and} \hspace{10pt} b_{\hat{\theta}} = \mathbb{E}_{x|\theta}[\hat{\theta}]-\theta$$
 \end{theorem}
 
 \begin{proof} 
-$$\Lambda = \dfrac{\partial}{\partial{\theta}} \log{p(x|\theta)}= \dfrac{1}{p(x|\theta)} \dfrac{\partial}{\partial{\theta}} p(x|\theta)$$
 
 $$\mathbb{E}_{x|\theta}[\Lambda] = \int_{x} p(x|\theta) \Lambda \; dx= \int_{x} \dfrac{\partial}{\partial{\theta}} p(x|\theta) dx = \dfrac{\partial}{\partial{\theta}}\overbrace{\int_{x} p(x|\theta)dx}^{=1} = 0$$
 
@@ -186,7 +189,7 @@ $$\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}]= \int_{x} p(x|\theta) \Lambda \hat
 = \dfrac{\partial}{\partial{\theta}} \int_{x} p(x|\theta) \hat{\theta} \; dx = \dfrac{\partial}{\partial{\theta}} \mathbb{E}_{x|\theta}[\hat{\theta}] = \dfrac{\partial}{\partial{\theta}} (\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta) + 1 =\dfrac{\partial}{\partial{\theta}} b_{\hat{\theta}}+1 $$
 
 Consider the cross-correlation between $\Lambda$ and $\hat{\theta}$:
-$$\Big(\mathbb{E}_{x|\theta}\big[ (\Lambda - \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0}) (\hat{\theta} - \mathbb{E}_{x|\theta}[\hat{\theta}\big] \Big)^2 = \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] - \mathbb{E}_{x|\theta}\big[ \Lambda \mathbb{E}_{x|\theta}[\hat{\theta}]  
+$$\Big(\mathbb{E}_{x|\theta}\big[ (\Lambda - \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0}) (\hat{\theta} - \mathbb{E}_{x|\theta}[\hat{\theta}\big])] \Big)^2 = \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] - \mathbb{E}_{x|\theta}\big[ \Lambda \mathbb{E}_{x|\theta}[\hat{\theta}]  
 \big] \Big)^2 = \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] -  \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0} \mathbb{E}_{x|\theta}[\hat{\theta}
 \big] \Big)^2 =  \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] \Big)^2$$
 
@@ -217,4 +220,48 @@ $$
 \mathbb{E}\Big[ (\hat{\theta}_{JS}- \theta_0)^2\Big] \leq \mathbb{E}\Big[ (\hat{\theta}_{ML}- \theta_0)^2\Big] \; \; \text{for any} \; \theta_0 
 $$
 Moreover, the inequality is strict for some values of $\theta_0$.
+
+\section{Bayesian Learning}
+Bayesian inference is usually carried out in the following way:
+
+\begin{itemize}
+    \item $\theta$ is considered to be a \textbf{random variable}  with distribution $p(\theta|\mathcal{X})$.
+    \item $X \sim p(x)$  and $p(x)$ is unknown. 
+    \item  $p(x|\theta)$ is  a statistical model that reflects our beliefs about $x$ given $\theta$.
+\end{itemize}
+
+We are looking for $p(X=x|\mathcal{X})$, i.e., the probability of $x$ given the sample set $\mathcal{X}$ (class conditional density):
+
+$$p(X=x|\mathcal{X}) = \int \underbrace{p(x,\theta|\mathcal{X})}_{p(x|\theta,\mathcal{X})p(\theta|\mathcal{X})}d\theta =
+\int p(x|\theta,\mathcal{X})p(\theta|\mathcal{X})d\theta = \int p(x|\theta)p(\theta|\mathcal{X})d\theta  $$
+
+Where $p(x|\theta,\mathcal{X})= p(x|\theta)$ since $x_i \in \mathcal{X}$ and $x$ are i.i.d.\\\\
+Moreover, asymptotically it holds that $p(\theta| \mathcal{X}) \sim \delta(\theta- \hat{\theta}) $; intuitively, this follows from the fact that $\hat{\theta}  \overset{p}{\to} \theta_{true}$. Thus, in the asymptotic case, we can approximate the integral with:
+
+$$p(X=x|\mathcal{X}) = \int p(x|\theta)p(\theta|\mathcal{X})d\theta \approx
+\int p(x|\theta) \delta(\theta- \hat{\theta})d\theta  = p(x|\hat{\theta}) $$
+
+This approximation was used in the early days of Bayesian inference when it was not possible to evaluate the integral. 
+\newpage
+\subsection{Bayesian Learning of a Normal Distribution}
+Let us begin with a simple example in which we consider a single Gaussian random variable $x$. We shall suppose that the variance $\sigma^2$ is known, and we consider the task of inferring the mean $\mu$ given a set of $N$ observations:
+\begin{itemize}
+    \item The likelihood is $p(x|\mu)= \mathcal{N}(\mu,\sigma^2)$
+    \item The prior is $p(\mu) = \mathcal{N}(\mu_0,\sigma_0^2)$
+    \item The data is $\mathcal{X} = \{x_1,\ldots,x_n\}$
+\end{itemize}
+
+We want to compute the posterior distribution $p(\mu|\mathcal{X})$:
+$$p(\mu|\mathcal{X}) \propto p(\mathcal{X}|\mu)p(\mu) \implies p(\mu|\mathcal{X}) = \alpha \; p(\mathcal{X}|\mu)p(\mu)
+= \alpha \cdot \prod_{i \leq n} \Big\{ \dfrac{1}{\sqrt{2\pi \sigma}} \exp{\Big(-\dfrac{1}{2} \big(\dfrac{x_i-\mu}{\sigma}\big)^2 \Big)}\Big\} \cdot \dfrac{1}{\sqrt{2\pi \sigma_0}} \exp{\Big(-\dfrac{1}{2} \big(\dfrac{\mu-\mu_0}{\sigma_0}\big)^2 \Big)}$$
+$$=\alpha' \cdot  \prod_{i \leq n} \Big\{  \exp{\Big(-\dfrac{1}{2} \big(\dfrac{x_i-\mu}{\sigma}\big)^2 \Big)}\Big\} \cdot \exp{\Big(-\dfrac{1}{2} \big(\dfrac{\mu-\mu_0}{\sigma_0}\big)^2 \Big)} = \alpha' \cdot \exp{\Big\{-\dfrac{1}{2} \Big( \sum_{i \leq n} \Big(\dfrac{x_i-\mu}{\sigma}\Big)^2 + \Big(\dfrac{\mu-\mu_0}{\sigma_0}\Big)^2  \Big)\Big\}}$$
+Expanding the squares we get:
+$$p(\mu|\mathcal{X})= \alpha'\cdot \exp{\Big(  \mu^2 \overbrace{\big( \dfrac{n}{\sigma^2} + \dfrac{1}{\sigma_0^2}\big)}^{a} -2\mu \overbrace{\big(\dfrac{\mu_0}{\sigma_0^2} + \dfrac{1}{\sigma^2}\sum_{i \leq n}x_i^2  \big)}^{b} + c \Big)} $$
+Which we know is a Gaussian Distribution, i.e. $p(\mu|\mathcal{X}) \sim \mathcal{N}(\mu_n,\sigma_n^2)$, because the exponent is a quadratic form. Furthermore, by completing the square we know that:
+$$\mu_n = \dfrac{b}{a} = \dfrac{n \sigma_0^2}{n \sigma_0^2 + \sigma^2} \hat{\mu}_n + \dfrac{ \sigma^2}{n \sigma_0^2 + \sigma^2} \mu_0$$
+$$\sigma_n^2 = \dfrac{1}{a} = \dfrac{\sigma^2 \sigma_0^2}{n\sigma_0^2+\sigma^2}$$
+
+It is worth spending a moment studying the form of the posterior mean and variance. First of all, note that the mean of the posterior is a compromise between $\mu_0$ and the maximum likelihood solution $\hat{\mu}$. If the number of observed data points $n=0$ then $\mu_n$ reduces to the prior mean as expected. For $n \to \infty$, $\mu_n$ is given by the maximum likelihood solution. \\ Similarly, consider the result for the variance of the posterior distribution $\sigma_n^2$. With no observed data points, we have the prior variance, whereas if the number of data points $n \to \infty$, the variance goes to zero and the posterior distribution becomes infinitely peaked around the maximum likelihood solution.\\
+We therefore see that the maximum likelihood result of a point estimate for $\mu$ is recovered precisely from the Bayesian formalism in the limit of an infinite number of observations.
+
 \end{document}

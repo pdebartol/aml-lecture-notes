@@ -378,7 +378,7 @@ Let $X$ be a non-empty set and $\Im$ a collection of subsets of $X$ such that:
     \item $X \in \Im$;
     \item $\emptyset \in \Im$;
     \item If $O_1,...,O_n \in \Im$, then $O_1 \cap... \cap O_n \in \Im$;
-    \item If for each $\alpha \in I$, $O_\alpha \in \Im$, then $\cup_{\alpha \in I} \in \Im$;
+    \item If for each $\alpha \in I$, $O_\alpha \in \Im$, then $\cup_{\alpha \in I} O_\alpha \in \Im$;
 \end{enumerate}
 The pair of objects $(X, \Im)$ is called a topological space.
 \end{definition}
@@ -395,7 +395,7 @@ A pair of objects $(X, d)$ consisting of a non-empty set $X$ and a function $d: 
 \end{enumerate}
 The function $d$ is called a distance function or metric on $X$ and the set $X$ is called the underlying set.
 \end{definition}
-\textbf{Example:} $(\mathbb{R}, d)$ is a metric space, where $d$ is the function defined by $d(a,b) = |a-b| \forall a,b \in \mathbb{R}$.
+\textbf{Example:} $(\mathbb{R}, d)$ is a metric space, where $d$ is the function defined by $d(a,b) = |a-b| \: \forall a,b \in \mathbb{R}$.
 \begin{definition} \textbf{Scalar Product}
 Let $X$ be a non-empty set and $\mathcal{V} = (X,+,\cdot)$ a vector space. A function $\phi : X \times X \rightarrow \mathbb{R}$ which assigns two vectors $\boldsymbol{x}, \boldsymbol{y} \in \mathcal{V}$ a real number is called \textbf{scalar product} on $\mathcal{V}$ if the following properties hold:
 \renewcommand{\theenumi}{\Roman{enumi}}
