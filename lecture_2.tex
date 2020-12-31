@@ -109,8 +109,8 @@
 \section{Data Representation}
 
 One of the fundamental problems in Machine Learning is how a machine should represent an object/concept.\\
-Machine only understand numbers, so we need to find a way to condensate all the information about an object in a set of numbers (i.e a vector). Such representation can later be used to perform different tasks; whether we want to classify the object, generate new ones or do anything else.\\
-Choosing the wrong data representation can induce inappropriate similarity measures.
+Machines only understand numbers, thus we need to find a way to condensate all the information about an object in a set of numbers (i.e a vector). Such representation can later be used to perform different tasks; whether we want to classify the object, generate new ones or do anything else.\\
+One must be extremely careful in choosing the data representation: a wrong data representation can induce inappropriate similarity measures.
 
 \subsection{Definition of Structures}
 
@@ -126,7 +126,7 @@ Measurements represent objects in a data space, e.g digits as objects and pixel 
 
 \section{Feature Space}
 
-\textbf{Measurement space $X$:} the mathematical space in which the data are represented, e.g numerical ($X \in \mathbb{R}^d$), Boolean ($X \in \mathbb{B}$) or categorical ($X = \{1, ..., K\}$) features.\\
+\textbf{Measurement space $\mathcal{X}$:} the mathematical space in which the data are represented, e.g numerical ($\mathcal{X} \subset \mathbb{R}^d$), Boolean ($\mathcal{X} = \mathbb{B}$) or categorical ($\mathcal{X} = \{1, ..., K\}$) features.\\
 Features are derived quantities or indirect observations which often significantly compress the information content of measurements.\\
 The selection of a specific feature space predetermines the metric to compare data, this choice is the first significant design decision in a machine learning system.
 
@@ -136,14 +136,14 @@ The selection of a specific feature space predetermines the metric to compare da
 
 Learning requires to infer a functional or statistical relationship between variables when we only observe noisy samples.
 Approximation and interpolation in function estimation are such procedures. \\
-The problem without additional assumptions is mathematically ill-defined since many different functions might be compatible with many observations. We, therefore, require that our inference has to "work" on future data.
+The problem without additional assumptions is mathematically ill-defined since many different functions might be compatible with our observations. We, therefore, require that our inference has to "work" on future data.
 Mathematically, the expected quality of inference should be high and not necessarily the empirically observed quality.\medskip
 
 Applications in which the training data comprises examples of the input vectors along with their corresponding target vectors are known as \textbf{supervised learning} problems.\\
 Cases such as the digit recognition example, in which the aim is to assign each input vector to one of a finite numbers of discrete categories, are called \textbf{classification} problems.\\
 If the desired output consists of one or more continuous variables, then the task is called \textbf{regression}.\medskip
 
-In other pattern recognition problems, the training data consists of a set of input vectors $x$ without any corresponding target values. The goal in such \textbf{unsupervised learning} problems may be to discover groups of similar examples within the data, where it is called \textbf{clustering}, or to determine the distribution of data within the input space, known as \textbf{density estimation}, or to project the data from a high dimensional space down to two or three dimensions for the purpose of visualization (\textbf{dimension reduction}).\medskip
+In other pattern recognition problems, the training data consists of a set of input vectors $\mathcal{X}$ without any corresponding target values. The goal in such \textbf{unsupervised learning} problems may be to discover groups of similar examples within the data, where it is called \textbf{clustering}, or to determine the distribution of data within the input space, known as \textbf{density estimation}, or to project the data from a high dimensional space down to two or three dimensions for the purpose of visualization (\textbf{dimension reduction}).\medskip
 
 Another task could be \textbf{data compression}, where a system predicts the posterior probabilities of a sequence given its entire history. This can be used for optimal data compression.\medskip
 
@@ -152,14 +152,14 @@ Finally, the technique called \textbf{reinforcement learning} is concerned with 
 \subsection{Supervised Learning}
 
 A teacher (oracle) provides the correct answer during training.\\
-Data are pairs of features and response variables $\{(x_1, y_1), ..., (x_n, y_n) : x_i \in X \subset \mathbb{R}^d, y_i \in  \mathbb{K}\}$ with:\\
+Data are pairs of features and response variables $\{(x_1, y_1), ..., (x_n, y_n) : x_i \in \mathcal{X} \subset \mathbb{R}^d, y_i \in  \mathbb{K}\}$ with:\\
 $\mathbb{K} = \{1,...,K\}$ for classification where $\mathbb{K}$ is an index set for the classes;\\
 $\mathbb{K} = [0, 1]^K$ is the space of assignments for probabilistic classification;\\
 $\mathbb{K} \subset \mathbb{R}$ for regression.\medskip
 
 \textbf{Problem}: The data are noise contaminated, e.g the response variable $y = f(x,w) + \eta$ depends on the function with parameters $w$ and Gaussian white noise $\eta$.\\
 \textbf{Question}: How can we infer a functional relationship $f(x, w)$ from data which are described by the statistical relationship $P(X = x, Y = y)$?\\
-Statistical learning theory provides the \textbf{answer}: define a function class $C = \{f(x, w): w \in W, x \in \mathbb{R}^d\}$ where $w$ indexes the function (hypothesis) class $C$. It turns out that the "complexity" of the function class $C$ is the essential concept to describe the difficulty of learning. If we have too few data and we work with a too complex function class then learning algorithms have a strong tendency to overfit, i.e to confuse/interpret noise as signal.
+Statistical learning theory provides the \textbf{answer}: define a function class $\mathcal{C} = \{f(x, w): w \in W, x \in \mathbb{R}^d\}$ where $w$ indexes the functions (hypothesis) in class $\mathcal{C}$. It turns out that the "complexity" of the function class $\mathcal{C}$ is the essential concept to describe the difficulty of learning. If we have too few data and we work with a too complex function class then learning algorithms have a strong tendency to overfit, i.e to confuse/interpret noise as signal.
 
 \newpage
 
@@ -177,15 +177,28 @@ What can we do about overfitting?
     \item Maximize estimated empirical generalisation performance by cross-validation.
 \end{itemize}
 
-We search a function $f(x) \in C$ out of the hypothesis class/solution space $C$ such that:
+We search a function $f(x) \in \mathcal{C}$ out of the hypothesis class/solution space $C$ such that:
 \begin{center}
 $f : X \rightarrow Y$\\
 $x \rightarrow y = f(x)$
 \end{center}
 Often we index the function $f(x) = f_\theta(x)$ by a parameter $\theta$.\\
-Given an input space $X$ with data $x \in X$ find an interpretation $c \in C$. $x$ is a random variable and $c$ is a random variable as well if it is calculated from $x$ by a procedure $\mathbb{A}$.\\
-We search for a posterior distribution $P(C | X)$.\\
-Special choice: $P(C | X) = \frac{\exp{(-\beta R(C, X))}}{\sum\limits_{\substack{c}} \exp{(-\beta R(C, X))}} $ 
+
+
+\subsection{Generalization}
+Given an input space $\mathcal{X}$ with data $x \in \mathcal{X}$ find an interpretation $c \in \mathcal{C}$.
+
+$$x \;\text{is a random variable and} \; c \; \text{ is calculated from} \; x \text{ by a procedure}\; \mathcal{A} \implies c \; \text{is a random variable}$$
+
+Thus, we can search for a posterior distribution $P(c|x)$.\\
+One special choice is the Gibbs Distribution: $P(c | x) = \dfrac{\exp{(-\beta \mathcal{R}(c, x))}}{\sum_{c \in \mathcal{C}}\exp{(-\beta \mathcal{R}(c, x))}} $ 
+
+If you know what the $\mathcal{R}$ is then this probability distribution tells you how for a certain parameter $\beta$ you should draw your solution. The problem with this special choice is that now we need to model this $\mathcal{R}$ and furthermore, it has to be  \textbf{validated}.\\\\
+Assume that two datasets $\mathcal{X}',\mathcal{X}''  \sim p(x',x'') = p(x')p(x'')$ are given. We can consider the expected risk to assess how well our choice of $\mathcal{R}$ generalizes:
+
+$$\mathbb{E}_{\mathcal{X}' \mathcal{X}''}\Big[ \sum_{c \in \mathcal{C}} p(c|x')\mathcal{R}(c,x'') \Big] = \sum_{\mathcal{X}'}\sum_{\mathcal{X}''} p(x'') \sum_{c \in \mathcal{C}} p(c,x')\mathcal{R}(c,x'')= \sum_{c \in \mathcal{C}} p(c) \mathbb{E}_{\mathcal{X}''}\big[ \mathcal{R}(c,x'') \big]$$
+
+One might argue that minimizing the expected risk is not the optimal inference principle for validating $\mathcal{R}$. The problem is that $\mathcal{R}$ is particularly large when you're far away from the minimum and that's exactly when you expect $p(c)$ to be very small because solutions which give you an high cost on the test data presumably should be rare also on the train data. Thus, the situation is  unstable, you multiply a very large cost value with a very small probability ($0 \cdot \infty$). From an information-theory point of view, score-maximization is a better principle; however, risk-minimization leads to convex problems that are computationally more feasible.
 
 \subsection{Quality of the estimate}
 
@@ -208,7 +221,7 @@ Given the random variable $X$ the conditional expected risk is defined as:
 \begin{center}
     $R_{true}(f,x) = \underset{p}{\mathbb{E}}[L(f(x), y)] = \int_x\int_y L(f(x), y)P(x, y) dx dy$
 \end{center}
-Where $p$ is the true distribution over the inputs $x$ and $y$. The risk measures how much, on average, it hurts to use $f$ as our prediction algorithm.
+Where $p$ is the true distribution over the inputs $x$ and $y$. The risk measures how much error we have, on average,  using $f$ as our prediction algorithm.
 \newpage
 This can be clarified by considering an example. Suppose we want to fit a function for predicting if it will rain or not. The input $x$ will be the sky: CLEAR, CLOUDY or MIXED.\\
 The output y will be either RAIN or NOPE. The loss function is now a function $L : \{\text{RAIN, NOPE}\}^2 \rightarrow \mathbb{R}$.\\
@@ -297,9 +310,12 @@ The test error amounts to $\hat{R}(f, \mathcal{Z}^{test}) = \frac{1}{m}\sum\limi
 When we use test data for validation, then estimator adaption introduces statistical dependencies between outcome of the learning process (estimator) and test data. This design flow yields a too optimistic estimate of the test error.\\
 Furthermore, it is important to \textbf{distinguish between test error and expected risk}:
 \begin{equation*}
-    \hat{R}(f, \mathcal{Z}^{test}) \neq \underset{x}{\mathbb{E}}[R(f^*, X)]
+    \hat{\mathcal{R}}(f^*, \mathcal{Z}^{test}) \neq \underset{x}{\mathbb{E}}[\mathcal{R}(f^*, X)]
 \end{equation*}
-What is the probability $P(|\hat{R}(f, \mathcal{Z}^{test})-\underset{x}{\mathbb{E}}[R(f^*, X)]|> \epsilon)$?\\
+
+Notice that $\underset{x}{\mathbb{E}}[\mathcal{R}(f^*, X)]$ is a random variable since $f^*$ is random. Moreover,  this inequality holds because there is more randomness on the LHS than on the RHS ($f^*$ and $\mathcal{Z}^{test}$ vs $f^*$). 
+
+We can ask what is the probability $P(|\hat{R}(f^*, \mathcal{Z}^{test})-\underset{x}{\mathbb{E}}[R(f^*, X)]|> \epsilon)$? If we succeed in bounding this probability close to 0, then we have an assurance against bad surprises. \\
 The test error empirically estimates the expected risk. To assess the quality of the estimate we should report mean and variance or another measure of deviation.
 
 \newpage
@@ -362,7 +378,7 @@ Let $X$ be a non-empty set and $\Im$ a collection of subsets of $X$ such that:
     \item $X \in \Im$;
     \item $\emptyset \in \Im$;
     \item If $O_1,...,O_n \in \Im$, then $O_1 \cap... \cap O_n \in \Im$;
-    \item If for each $\alpha \in I$, $O_\alpha \in \Im$, then $\cup_{\alpha \in I} \in \Im$;
+    \item If for each $\alpha \in I$, $O_\alpha \in \Im$, then $\cup_{\alpha \in I} O_\alpha \in \Im$;
 \end{enumerate}
 The pair of objects $(X, \Im)$ is called a topological space.
 \end{definition}
@@ -379,7 +395,7 @@ A pair of objects $(X, d)$ consisting of a non-empty set $X$ and a function $d: 
 \end{enumerate}
 The function $d$ is called a distance function or metric on $X$ and the set $X$ is called the underlying set.
 \end{definition}
-\textbf{Example:} $(\mathbb{R}, d)$ is a metric space, where $d$ is the function defined by $d(a,b) = |a-b| \forall a,b \in \mathbb{R}$.
+\textbf{Example:} $(\mathbb{R}, d)$ is a metric space, where $d$ is the function defined by $d(a,b) = |a-b| \: \forall a,b \in \mathbb{R}$.
 \begin{definition} \textbf{Scalar Product}
 Let $X$ be a non-empty set and $\mathcal{V} = (X,+,\cdot)$ a vector space. A function $\phi : X \times X \rightarrow \mathbb{R}$ which assigns two vectors $\boldsymbol{x}, \boldsymbol{y} \in \mathcal{V}$ a real number is called \textbf{scalar product} on $\mathcal{V}$ if the following properties hold:
 \renewcommand{\theenumi}{\Roman{enumi}}

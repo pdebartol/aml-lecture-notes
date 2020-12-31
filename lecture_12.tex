@@ -132,8 +132,8 @@ Let $\mathbf{\mathcal{H}}$ and $c$ be an hypothesis class and a concept. A \text
 
 \begin{definition}
 A learning algorithm $\mathbf{\mathcal{A}}$ can learn a concept $c \in \mathbf{\mathcal{C}}$ if there is a polynomial function $poly(\ldots)$ such that for any distribution $\mathbf{\mathcal{D}}$ on $\mathbf{\mathcal{X}}$ and for any $0 < \epsilon <\dfrac{1}{2}$ and $0 < \delta <\dfrac{1}{2}$: \\
-if $\mathbf{\mathcal{A}}$ receives as input a sample $\mathbf{\mathcal{Z}}$ of size $n \geq poly\Big(\dfrac{1}{\epsilon},\dfrac{1}{\delta},size(c)\Big)$, then $\mathbf{\mathcal{A}}$ outputs $\hat{c}$ such that:
-$$\mathbf{\mathbb{P}}_{\mathcal{Z} \sim \mathcal{D}}\Big(\mathcal{R}(\hat{c}) \leq \epsilon \Big) \geq 1- \delta$$
+if $\mathbf{\mathcal{A}}$ receives as input a sample $\mathbf{\mathcal{Z}}$ of size $n \geq poly\Big(\dfrac{1}{\epsilon},\dfrac{1}{\delta},size(\mathcal{X})\Big)$, then $\mathbf{\mathcal{A}}$ outputs $\hat{c}$ such that:
+$$\mathbf{\mathbb{P}}_{\mathcal{Z} \sim \mathcal{D}^n}\Big(\mathcal{R}(\hat{c}) \leq \epsilon \Big) \geq 1- \delta$$
 \end{definition}
 
 First notice that the distribution of the data is arbitrary but fixed, therefore if a concept class is
@@ -217,6 +217,18 @@ $$\leq |\mathcal{C}| \; \Big  (1-\mathcal{R}(\hat{c})\Big)^n \leq |\mathcal{C}| 
 In particular, if we want
 this probability to be smaller than some $\delta > 0$, it would suffice to let\\ $n > \dfrac{1}{\epsilon} \big(\log{|\mathcal{C}|}+  log(1/\delta) \big)$.
 \end{proof}
+
+\section{The General PAC-learning model}
+In general, an instance label is not determined by the underlying concept. This is modeled with a distribution $\mathcal{D}$ on $\mathcal{X} \times \{0,1\}$ and reflects the fact that two instances with identical features might have different labels. The training set $\mathcal{Z}$ is therefore a sample from $\mathcal{D}$. Our goal is to find a hypothesis $\hat{c} \in \mathcal{H}$ with small generalization error $\mathcal{R}(\hat{c})$. \\ \\
+However, if the optimal classifier is not an element of the hypothesis class, then it is impossible to attain $ \forall  \; 0  < \epsilon < 1/2: \mathcal{R}(\hat{c}) \leq \epsilon$. Instead, we aim to obtain the best possible solution i.e.,
+$$\mathcal{R}(\hat{c}) - \inf_{c \in \mathcal{C}}{\mathcal{R}(c) \leq \epsilon}$$
+
+\begin{definition}
+A learning algorithm $\mathbf{\mathcal{A}}$ can learn a concept $c \in \mathbf{\mathcal{C}}$ if there is a polynomial function $poly(\ldots)$ such that for any distribution $\mathbf{\mathcal{D}}$ on $\mathbf{\mathcal{X}}$ and for any $0 < \epsilon <\dfrac{1}{2}$ and $0 < \delta <\dfrac{1}{2}$: \\
+if $\mathbf{\mathcal{A}}$ receives as input a sample $\mathbf{\mathcal{Z}}$ of size $n \geq poly\Big(\dfrac{1}{\epsilon},\dfrac{1}{\delta},size(\mathcal{X})\Big)$, then $\mathbf{\mathcal{A}}$ outputs $\hat{c}$ such that:
+$$\mathbf{\mathbb{P}}_{\mathcal{Z} \sim \mathcal{D}^n}\Big(\mathcal{R}(\hat{c}) - \inf_{c \in \mathcal{C}}{\mathcal{R}(c)} \leq \epsilon \Big) \geq 1- \delta$$
+\end{definition}
+\newpage
 
 \section{Vapnik-Chervonenkis Inequality}
 
