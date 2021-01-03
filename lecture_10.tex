@@ -404,7 +404,7 @@ $$\dfrac{\partial \mathcal{L}_{n} }{\partial b^{(l)}_{j}} = \sum_{k=1}^{K} \dfra
 Now we can outline the steps of the training algorithm:
 \begin{itemize}
 \item \textbf{Forward Pass}: Set $x^{(0)} = x_{n}$. Compute for $l = 1, \ldots  L+1$ :    $z^{(l)} = (W^{(l)})^T x^{(l-1)} + b^{(l)}$ and  $x^{(l)} = \phi(z^{(l)})$
-\item \textbf{Backward Pass}: Set $\delta^{(L+1)} = -2(y_{n} - x^{(L+1)}a)\phi'(z^{(L+1)})$. Compute for
+\item \textbf{Backward Pass}: Set $\delta^{(L+1)} = -2(y_{n} - x^{(L+1)})\phi'(z^{(L+1)})$. Compute for
 $l = L, \ldots 1$:  $\delta^{(l)} = (W^{(l+1)}\delta^{(l+1)}) \odot \phi'(z^{(l)})$
 
 \item \textbf{Final Computation}: For all parameters compute $\dfrac{\partial \mathcal{L}_{n} }{\partial w^{(l)}_{i,j}} = \delta^{(l)}_{j}  x_{i}^{(l-1)}$ and $\dfrac{\partial \mathcal{L}_{n} }{\partial b^{(l)}_{j}} = \delta^{(l)}_{j}$
@@ -436,8 +436,8 @@ generate $\mathbf{x}$: attributes, orientation, etc. \\
 of this generative model:
 
 \begin{itemize}
-    \item We choose the  prior ${p(z)}$ to be simple, e.g. Gaussian.
-    \item The conditional distribution $p(x|z)$ on the other hand is complex. We can model it with a neural network. 
+    \item We choose the  prior ${p(z)}$ to be simple, e.g. Gaussian $p(z) \sim \mathcal{N}(0,\mathcal{I})$
+    \item The conditional distribution $p(x|z)$ on the other hand is complex. We can model it with a neural network. In the case of images, an example would be a multivariate Bernoulli representing the state of each pixel $p(x|z) \sim Ber(\theta)$.
     \item We train the model to maximize the likelihood of the training data: $$p_{\theta}(x)= \int \overbrace{p_{\theta}(z)}^\text{Gaussian Prior}\overbrace{p_{\theta}(x|z)}^\text{Decoder NN}dz$$
 \end{itemize}
 
@@ -461,9 +461,10 @@ Now, we can find a lower bound (Evidence Lower Bound) for the likelihood of the 
    \\ & =  \mathbb{E}_{z} \Big[\log{\dfrac{p_{\theta}(x^{(i)} | z) p_{\theta}(z)}{p_{\theta}(z| x^{(i)})}} \Big] &&& \text{(Bayes Rule)} \\
    & =  \mathbb{E}_{z} \Big[\log{\dfrac{p_{\theta}(x^{(i)} | z) p_{\theta}(z)}{p_{\theta}(z| x^{(i)})} \dfrac{q_{\phi}(z|x^{(i)})}{q_{\phi}(z|x^{(i)})}}  \Big] &&& \text{(Multiply and divide by q)}
    \\ & =  \mathbb{E}_{z} \Big[\log{p_{\theta}(x^{(i)} | z)}  \Big] - \mathbb{E}_{z} \Big[\log{\dfrac{q_{\phi}(z|x^{(i)})}{p_{\theta}(z)}} \Big]  + \mathbb{E}_{z} \Big[\log{\dfrac{q_{\phi}(z|x^{(i)})}{p_{\theta}(z| x^{(i)})}} \Big] &&& \text{(Logarithms property)} \\
-   & =  \overbrace{\mathbb{E}_{z} \Big[\log{p_{\theta}(x^{(i)} | z)}  \Big] - D_{KL}\Big(q_{\phi}(z|x^{(i)}) \; || \; p(z)\Big)}^\text{$=\mathcal{L}_{\theta,\phi}$ (ELBO)} + \overbrace{D_{KL}\Big(q_{\phi}(z|x^{(i)}) \; || \; p_{\theta}(x^{(i)} | z)\Big)}^\text{$\geq 0$}
+   & =  \overbrace{\mathbb{E}_{z} \Big[\log{p_{\theta}(x^{(i)} | z)}  \Big] - D_{KL}\Big(q_{\phi}(z|x^{(i)}) \; || \; p(z)\Big)}^\text{$=\mathcal{L}_{\theta,\phi}$ (ELBO)} + \overbrace{D_{KL}\Big(q_{\phi}(z|x^{(i)}) \; || \; p_{\theta}(z |x^{(i)})\Big)}^\text{$\geq 0$}
    \end{aligned}
 \end{equation*}
+In this context, the first term on the RHS  can be interpreted as expected negative reconstruction error. The second term is a regularization term that encourages the variational distribution to be close to the prior over latent variables. If the regularization term is omitted, the variational distribution would collapse to a delta function and the variational autoencoder would degenerate to a “usual” deterministic autoencoder.
 
 Finally, we can find the optimal parameters optimizing the ELBO:
 
@@ -471,7 +472,7 @@ $$\theta^*, \phi^* = argmax_{\theta,\phi} \sum_{i=1}^{N} \mathcal{L}(x^{(i)},\th
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.7\textwidth]{img/vae_3.png}
+\includegraphics[width=0.45\textwidth]{img/vae_3.png}
 \end{figure}
 
 \end{document}

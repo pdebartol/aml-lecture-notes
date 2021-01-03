@@ -271,13 +271,13 @@ But why do we need \textbf{uniform convergence}?\\
 Overfitting the data implies that $\mathcal{\hat{R}}_{n}(c)$ and $\mathcal{R}(c)$ are very different, even if $\mathcal{\hat{R}}_{n}(c)$ is an unbiased
 estimator of $\mathcal{R}(c)$!
 Why will this happen? $\mathcal{\hat{R}}_{n}(c)$ is just the sample-average version of $\mathcal{R}(c)$, right? Is this contradicting the law
-of large number that $\mathcal{\hat{R}}_{n}(c)$ converges to $\mathcal{R}(c)$?\\
-It is true that $\mathcal{\hat{R}}_{n}(c)$ is an unbiased estimator of $\mathcal{R}(c)$ and yes indeed the law of large number is applicable
-in this case. But a key requirement for using the law of large number is that we assume $c$ is fixed. Namely,
-if the classifier $c$ is fixed, then the law of large number guarantees that the empirical risk $\mathcal{\hat{R}}_{n}(c)$ converges
+of large numbers that $\mathcal{\hat{R}}_{n}(c)$ converges to $\mathcal{R}(c)$?\\
+It is true that $\mathcal{\hat{R}}_{n}(c)$ is an unbiased estimator of $\mathcal{R}(c)$ and yes indeed the law of large numbers is applicable
+in this case. But a key requirement for using the law of large numbers is that we assume $c$ is fixed. Namely,
+if the classifier $c$ is fixed, then the law of large numbers guarantees that the empirical risk $\mathcal{\hat{R}}_{n}(c)$ converges
 to the true risk function $\mathcal{R}(c)$.
-However, when we are finding the best classifier, we are consider many many many possible classifiers $c$.
-Although for a given classifier $c$ the law of large number works, it may not work when we consider many
+However, when we are finding the best classifier, we are considering many many many possible classifiers $c$.
+Although for a given classifier $c$ the law of large numbers works, it may not work when we consider many
 classifiers. The empirical risk minimization works if:
 $$\sup_{c \in \mathcal{C}}{|\mathcal{R}(c) - \mathcal{\hat{R}}_{n}(c)|}  \overset{p}{\to} 0$$
 
