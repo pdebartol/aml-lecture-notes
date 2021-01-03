@@ -107,8 +107,8 @@
 
 
 \section{Bagging} % Don't be this informal in your notes!
-Suppose we fit a model to our training data $Z = \{(x_{1},y_{1}),(x_{2},y_{2}),... ,(x_{n},y_{n})\}$, obtaining the prediction $\hat{f}(x)$ at input x. Bootstrap aggregation or bagging averages this prediction over a collection of bootstrap samples, thereby reducing its variance.
-For each bootstrap sample $\mathbf{Z}^{*b}, \; b = 1, 2,... ,B$, we fit our model, giving
+Suppose we fit a model to our training data $\mathcal{Z} = \{(x_{1},y_{1}),(x_{2},y_{2}),... ,(x_{n},y_{n})\}$, obtaining the prediction $\hat{f}(x)$ at input x. Bootstrap aggregation or bagging averages this prediction over a collection of bootstrap samples, thereby reducing its variance.
+For each bootstrap sample $\boldsymbol{\mathcal{Z}}^{*b}, \; b = 1, 2,... ,B$, we fit our model, giving
 prediction $\hat{f}^{*b}(x)$. The bagging estimate is defined by:
 \begin{equation*}
     \hat{f}_{bag}(x) = \dfrac{1}{B} \sum_{b=1}^{B}\hat{f}^{*b}(x)
@@ -120,7 +120,7 @@ Bagging can dramatically reduce the variance of unstable procedures like trees, 
 \begin{theorem}
 
 Assume our training observations $(x_{i},y_{i}), i = 1,... ,N $ are independently drawn from a distribution $\mathcal{P}$, and consider the ideal aggregate estimator $f_{ag}(x) = \mathbb{E}_{\mathcal{P}}[\hat{f}^*(x)]
-$. Here $x$ is fixed and the bootstrap dataset $\mathbf{Z^*}$
+$. Here $x$ is fixed and the bootstrap dataset $\boldsymbol{\mathcal{Z}^*}$
 consists of observations $x_{i}^*,y_{i}^*, \;  i = 1, 2,... ,N$
 sampled from $\mathcal{P}$.  Then:
 
@@ -134,23 +134,23 @@ sampled from $\mathcal{P}$.  Then:
 \begin{proof}
 \begin{align*}
        \mathbb{E}_{\mathcal{P}}[Y - \hat{f}^*(x)]^2 = \mathbb{E}_{\mathcal{P}}[Y +  \hat{f}_{ag}(x)- \hat{f}_{ag}(x) - \hat{f}^*(x)]^2  \\
-       = \mathbb{E}_{\mathcal{P}}[Y - \hat{f}_{ag}(x)]^2 + \mathbb{E}_{\mathcal{P}}[\hat{f}^*(x) - \hat{f}_{ag} ]^2 + \overbrace{2\mathbb{E}_{\mathcal{P}}[(Y-\hat{f}_{ag}(x))( \hat{f}^*(x)) - \hat{f}_{ag}(x)]}^\text{=0} \\
+       = \mathbb{E}_{\mathcal{P}}[Y - \hat{f}_{ag}(x)]^2 + \mathbb{E}_{\mathcal{P}}[\hat{f}^*(x) - \hat{f}_{ag} ]^2 + \overbrace{2\mathbb{E}_{\mathcal{P}}[(Y-\hat{f}_{ag}(x))( \hat{f}^*(x) - \hat{f}_{ag}(x))]}^\text{=0} \\
        \geq \mathbb{E}_{\mathcal{P}}[Y - \hat{f}_{ag}(x)]^2
 \end{align*}
 \end{proof}
 
 
 Note that
-$f_{ag}(x)$ is a bagging estimate, drawing bootstrap samples from the actual population $\mathcal{P}$ rather than the data. It is not an estimate that we can use in practice, but is convenient for analysis. Furthermore, note the strong assumption of independence, which unfortunately does not hold when sampling from $\mathbf{Z}$. The extra error on the right-hand side comes from the variance of $\hat{f}^*(x)$ around its mean $\hat{f}_{ag}(x)$. Therefore true population aggregation never increases mean squared error. This suggests that bagging—drawing samples
+$f_{ag}(x)$ is a bagging estimate, drawing bootstrap samples from the actual population $\mathcal{P}$ rather than the data. It is not an estimate that we can use in practice, but is convenient for analysis. Furthermore, note the strong assumption of independence, which unfortunately does not hold when sampling from $\boldsymbol{\mathcal{Z}}$. The extra error on the right-hand side comes from the variance of $\hat{f}^*(x)$ around its mean $\hat{f}_{ag}(x)$. Therefore true population aggregation never increases mean squared error. This suggests that bagging—drawing samples
 from the training data— will often decrease mean-squared error.
 However, the above argument does not hold for classification under 0-1 loss, because of the nonadditivity of bias and variance. In that setting, bagging a good classifier can make it better, but bagging a bad classifier can make it worse. Note that when we bag a model, \textbf{any simple structure in the model is lost}. For interpretation of the model this is clearly a drawback. 
 
 \subsection{Advantages of Bagging}
 \begin{itemize}
     \item Reduces variance, so has a strong beneficial effect on high variance classifiers.
-    \item As the prediction is an average of many classifiers, you obtain a mean score and variance. The latter can be interpreted as the uncertainty of the prediction. Especially in regression tasks, such uncertainties are otherwise hard to obtain. (Gaussian Processes for example)
+    \item As the prediction is an average of many classifiers, you obtain a mean score and variance. The latter can be interpreted as the uncertainty of the prediction. Especially in regression tasks, such uncertainties are otherwise hard to obtain.
     \item Bagging provides an unbiased estimate of the test error, which we refer to as the \textbf{out-of-bag error}. The idea is to  average the classifiers $\hat{f}^{*b}$  that have not seen a certain sample. Thus, we obtain a classifier that was not trained on $(x_{i},y_{i})$ ever. If we compute the error of all these classifiers, we obtain an estimate of the true test error. \textbf{The beauty is that we can do this without reducing the training set}. We just run bagging as it is intended and obtain this so called out-of-bag error for free. \\ \\
-    More formally, for each training point $(x_{i},y_{i}) \in Z$ let $S_{i}=\{ k| (x_{i},y_{i}) \not \in Z^{*k}\}$ - in other words $S_{i}$ contains the indexes of all the training sets which do not contain $(x_{i},y_{i})$. Let the averaged classifier over all these data sets be:
+    More formally, for each training point $(x_{i},y_{i}) \in \mathcal{Z}$ let $S_{i}=\{ k| (x_{i},y_{i}) \not \in \mathcal{Z}^{*k}\}$ - in other words $S_{i}$ contains the indexes of all the training sets which do not contain $(x_{i},y_{i})$. Let the averaged classifier over all these data sets be:
     
     \begin{equation*}
         h_{i}(x) = \dfrac{1}{|S_{i}|} \sum_{k \in S_{i}} f^{*k}(x)
@@ -172,8 +172,8 @@ One of the most famous and useful bagged algorithms is the Random Forest. A Rand
 The algorithm works as follows:
 
 \begin{enumerate}
-    \item Sample $B$ datasets $Z^{*1},\ldots,Z^{*B}$  from $Z$ with replacement.
-    \item For each $Z^{*b}$ train a full decision tree $\hat{f}^{*b}(x)$ with one small modification: before each split randomly subsample $k \leq d$ features (without replacement) and only consider these for your split.
+    \item Sample $B$ datasets $\mathcal{Z}^{*1},\ldots,\mathcal{Z}^{*B}$  from $\mathcal{Z}$ with replacement.
+    \item For each $\mathcal{Z}^{*b}$ train a full decision tree $\hat{f}^{*b}(x)$ with one small modification: before each split randomly subsample $k \leq d$ features (without replacement) and only consider these for your split.
     It can be shown that this step further increases the variance of the trees.
     \item The final classifier will be $\hat{f}(x) = \dfrac{1}{B} \sum_{b=1}^{B}\hat{f}^{*b}(x)$
 \end{enumerate}
