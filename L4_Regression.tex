@@ -165,14 +165,14 @@ The matrix $\boldsymbol{H} = \boldsymbol{X}(\boldsymbol{X}^{\intercal}\boldsymbo
 Figure 4.2 shows a different geometrical representation of the least squares estimate, this time in $\mathbb{R}^N$.
 We denote the column vectors of $\boldsymbol{X}$ by $x_0, x_1, . . . , x_p$ with $x_0 = 1$. For much of what follows, this first column is treated like any other. These vectors span a subspace of $\mathbb{R}^N$ , also referred to as the column space of $\boldsymbol{X}$. We minimize $\text{RSS} =  \norm{\boldsymbol{Y} - \boldsymbol{X\theta}}^2$ by choosing $\boldsymbol{\theta}$ so that the residual vector $\boldsymbol{Y} - \boldsymbol{\hat{Y}}$ is orthogonal to this subspace. This orthogonality is expressed in Eq. 4.2, and the resulting estimate $\boldsymbol{\hat{Y}}$ is hence the orthogonal projection of  $\boldsymbol{Y}$ onto this subspace. The hat matrix $\boldsymbol{H}$ computes the orthogonal projection, and hence it is also known as a projection matrix.
 \subsection{The Gauss Markov Theorem}
-The least squares estimates of the parameters $\boldsymbol{\theta}$ have the smallest variance among all linear unbiased estimates. We will make this precise here, and also make clear that the restriction to unbiased estimates is not necessarily a wise one. This observation will lead us to consider biased estimates such as ridge regression later. We focus on estimation of any linear combination of the parameters $\beta = a^\intercal\theta$; for example, predictions $f(x_0) = x_0^\intercal\theta$ are of this form. The least squares estimate of $a^\intercal\theta$ is:
+The least squares estimates of the parameters $\boldsymbol{\theta}$ have the smallest variance among all linear unbiased estimates. We will make this precise here, and also make clear that the restriction to unbiased estimates is not necessarily a wise one. This observation will lead us to consider biased estimates such as ridge regression later. We focus on estimation of any linear combination of the parameters $\beta = a^\intercal\theta$; for example, predictions $f(x_{n+1}) = x_{n+1}^\intercal\theta$ are of this form. The least squares estimate of $a^\intercal\theta$ is:
 \begin{equation*}
-    \beta = a^\intercal\hat{\theta} = a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\boldsymbol{Y}
+    \hat{\beta} = a^\intercal\hat{\theta} = a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\boldsymbol{Y}
 \end{equation*}
-Considering $\boldsymbol{X}$ to be fixed, this is a linear function $c^\intercal\boldsymbol{Y}$ of the response vector $\boldsymbol{Y}$. If we assume that the linear model is correct, $a^\intercal{\theta}$ is unbiased since:
+Considering $\boldsymbol{X}$ to be fixed, this is a linear function $c^\intercal\boldsymbol{Y}$ of the response vector $\boldsymbol{Y}$. If we assume that the linear model is correct, $a^\intercal{\hat{\theta}}$ is unbiased since:
 \begin{equation*}
 \begin{aligned}
-    \mathbb{E}[a^\intercal{\theta}] &= \mathbb{E}[a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\boldsymbol{Y}]\\
+    \mathbb{E}[a^\intercal{\hat{\theta}}] &= \mathbb{E}[a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\boldsymbol{Y}]\\
     &= a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal(\mathbb{E}[\boldsymbol{X}\theta + \epsilon])\\
     &= a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal(\boldsymbol{X}\theta + \cancelto{0}{\mathbb{E}[\epsilon]})\\
     &= a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\boldsymbol{X}\theta\\
@@ -181,39 +181,44 @@ Considering $\boldsymbol{X}$ to be fixed, this is a linear function $c^\intercal
 \end{equation*}
 \begin{equation*}
 \begin{aligned}
-    \text{Var}[a^\intercal{\theta}] &= \text{Var}[a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal(\boldsymbol{X}\theta + \epsilon)]\\
+    \text{Var}[a^\intercal{\hat{\theta}}] &= \text{Var}[a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal(\boldsymbol{X}\theta + \epsilon)]\\
     &= \text{Var}[a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\epsilon]\\
     &= \mathbb{E}[a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\epsilon\epsilon^\intercal\boldsymbol{X}(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}a]\\
     &= \sigma^2a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}a
 \end{aligned}
 \end{equation*}
-\textbf{Alternative unbiased linear estimator} $\widetilde{\beta} = a^\intercal c^\intercal\boldsymbol{Y} = a^\intercal\hat{\theta} + a^\intercal\boldsymbol{DY}$, where $c^\intercal = ((\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal + \boldsymbol{D})$:
+\textbf{Alternative unbiased linear estimator} $\widetilde{\beta} = 
+c^\intercal\boldsymbol{Y} = a^\intercal\hat{\theta} + a^\intercal\boldsymbol{DY}$, where $c^\intercal = a^\intercal((\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal + \boldsymbol{D})$:
 \begin{equation*}
 \begin{aligned}
-    \mathbb{E}[a^\intercal c^\intercal\boldsymbol{Y}] &= \mathbb{E}[a^\intercal\hat{\theta}] + \mathbb{E}[a^\intercal\boldsymbol{DY}]\\
-    &= a^\intercal\theta + \mathbb{E}[a^\intercal(\boldsymbol{X\theta} + \epsilon)]\\
+    \mathbb{E}[ c^\intercal\boldsymbol{Y}] &= \mathbb{E}[a^\intercal\hat{\theta}] + \mathbb{E}[a^\intercal\boldsymbol{DY}]\\
+    &= a^\intercal\theta + \mathbb{E}[a^\intercal\boldsymbol{D}(\boldsymbol{X\theta} + \epsilon)]\\
     &= a^\intercal\theta + a^\intercal\boldsymbol{DX}\theta + a^\intercal\boldsymbol{D}\cancelto{0}{\mathbb{E}[\epsilon]}\\
     &= a^\intercal\theta
 \end{aligned}
 \end{equation*}
-The unbiasedness condition $\mathbb{E}[a^\intercal c^\intercal\boldsymbol{Y}] = a^\intercal\theta$ implies $\boldsymbol{DX} = 0$.
+The unbiasedness condition $\mathbb{E}[ c^\intercal\boldsymbol{Y}] = a^\intercal\theta$ implies $a^\intercal\boldsymbol{DX} = \vec{0}$.
 \begin{theorem}{The Gauss Markov Theorem}\\
-For any linear estimator $\widetilde{\beta} = a^\intercal c^\intercal\boldsymbol{Y}$ that is unbiased for $a^\intercal\theta$, that is, $\mathbb{E}[a^\intercal c^\intercal\boldsymbol{Y}] = a^\intercal\theta$, the following holds:
+For any linear estimator $\widetilde{\beta} =  c^\intercal\boldsymbol{Y}$ that is unbiased for $a^\intercal\theta$, that is, $\mathbb{E}[ c^\intercal\boldsymbol{Y}] = a^\intercal\theta$, the following holds:
 \begin{equation*}
-    \text{Var}[a^\intercal\hat{\theta}] \leq \text{Var}[a^\intercal c^\intercal\boldsymbol{Y}]
+    \text{Var}[a^\intercal\hat{\theta}] \leq \text{Var}[ c^\intercal\boldsymbol{Y}]
 \end{equation*}
 \end{theorem}
 \begin{proof}
 \begin{equation*}
 \begin{aligned}
-    \text{Var}[a^\intercal c^\intercal\boldsymbol{Y}] &= a^\intercal c^\intercal \text{Cov}[\boldsymbol{Y}]ca = a^\intercal c^\intercal \sigma^2 \mathds{1} ca = \sigma^2 a^\intercal c^\intercal ca\\
-    &= \sigma^2a^\intercal ((\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal + \boldsymbol{D}) (\boldsymbol{X}(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1} + \boldsymbol{D}^\intercal)a\\
-    &= \sigma^2a^\intercal((\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\cancelto{\mathds{1}}{\boldsymbol{X}^\intercal\boldsymbol{X}(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}} + \boldsymbol{DD^\intercal})a\\
+    \text{Var}[ c^\intercal\boldsymbol{Y}] &=  c^\intercal \text{Cov}[\boldsymbol{Y}]c =  c^\intercal \sigma^2 \mathds{1} c = \sigma^2  c^\intercal c\\
+    &= \sigma^2a^\intercal ((\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal + \boldsymbol{D}) (\boldsymbol{X}(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1} + \boldsymbol{D}^\intercal))a\\
+    &= \sigma^2a^\intercal((\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\cancelto{\mathds{1}}{\boldsymbol{X}^\intercal\boldsymbol{X}(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}} + \boldsymbol{DD^\intercal} +\underbrace{(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}\boldsymbol{X}^\intercal\boldsymbol{D}^\intercal}_{\boldsymbol{X}^\intercal\boldsymbol{D}^\intercal a = \vec{0}}+ \underbrace{\boldsymbol{D}\boldsymbol{X}(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}}_{a^\intercal\boldsymbol{D}\boldsymbol{X}=\vec{0}} )a\\
     &= \sigma^2a^\intercal(\boldsymbol{X}^\intercal\boldsymbol{X})^{-1}a + \sigma^2a^\intercal\boldsymbol{DD^\intercal}a\\
     &= \text{Var}[a^\intercal\hat{\theta}] + \underbrace{\sigma^2\norm{\boldsymbol{D}^\intercal a}^2 }_\text{$\geq 0$} \geq \text{Var}[a^\intercal\hat{\theta}]
 \end{aligned}
 \end{equation*}
 \end{proof}
+
+ The key consequence of Gauss Markov Theorem: to beat the least squares estimate, you need bias
+or non-normality. \medskip
+Notice, however, that \textbf{over-fitting} might be a problem: we are assuming $\boldsymbol{X}$ fixed and thus, the Gauss-Markov theorem holds only for a specific instance of the training set $\boldsymbol{X}$. This can lead to high generalization error.
 
 \subsection{The Bias-Variance decomposition}
 The use of maximum likelihood, or equivalently least squares, can lead to severe over-fitting if complex models are trained using data sets of limited size. However, limiting the number of basis functions in order to avoid over-fitting has the side effect of limiting the flexibility of the model to capture interesting and important trends in the data. Although the introduction of regularization terms can control over-fitting for models with many parameters, this raises the question of how to determine a suitable value for the regularization coefficient $\lambda$. Seeking the solution that minimizes the regularized error function with respect to both the weight vector $\theta$ and the regularization coefficient $\lambda$ is clearly not the right approach since this leads to the unregularized solution with $\lambda = 0$.\\
@@ -234,11 +239,11 @@ Armed with the knowledge that the optimal solution is the conditional expectatio
 Substituting into the loss function and performing the integral over $y$, we see that the cross-term vanishes and we obtain an expression for the loss function in the form:
 \begin{equation}
     \mathbb{E}[L(\boldsymbol{X}, \boldsymbol{Y}; \hat{f})] = \int\{\hat{f}(\boldsymbol{x}) -
-    h(\boldsymbol{x})\}^2p(\boldsymbol{x})d\boldsymbol{x} + \underbrace{\int\{ h(\boldsymbol{x}) - y\}^2p(\boldsymbol{x}, y)d\boldsymbol{x}dy}_\text{noise}
+    h(\boldsymbol{x})\}^2p(\boldsymbol{x})d\boldsymbol{x} + \underbrace{\int\{ h(\boldsymbol{x}) - \boldsymbol{y}\}^2p(\boldsymbol{x}, \boldsymbol{y})d\boldsymbol{x}d\boldsymbol{y}}_\text{noise}
 \end{equation}
 The second term, which is independent of $\hat{f}(\boldsymbol{x})$, arises from the intrinsic noise on the data and represents the minimum achievable value of the expected loss. The first term depends on our choice for the function $\hat{f}(\boldsymbol{x})$, and we will seek a solution for $\hat{f}(\boldsymbol{x})$ which makes this term a minimum. Because it is non-negative, the smallest that we can hope to make this term is zero. If we had an unlimited supply of data (and unlimited computational resources), we could in principle find the regression function $h(\boldsymbol{x})$ to any desired degree of accuracy, and this would represent the optimal choice for $\hat{f}(\boldsymbol{x})$. However, in practice we have a data set containing only a finite number $N$ of data points, and consequently we do not know the regression function $h(\boldsymbol{x})$ exactly.\\
 If we model the $h(\boldsymbol{x})$ using a parametric function $\hat{f}(\boldsymbol{x}, \theta)$ governed by a parameter vector $\theta$, then from a Bayesian perspective the uncertainty in our model is expressed through a posterior distribution over $\theta$. A frequentist treatment, however, involves making a point estimate of $\theta$ based on the data set $D$, and tries instead to interpret the uncertainty of this estimate through the following thought experiment:\\
-Suppose we had a large number of data sets each of size $N$ and each drawn independently from the distribution $p(x, \boldsymbol{y})$. For any given data set $D$, we can run our learning algorithm and obtain a prediction function $\hat{f}(\boldsymbol{x}; D)$. Different data sets from the ensemble will give different functions and consequently different values of the squared loss. The performance of a particular learning algorithm is then assessed by taking the average over this ensemble of data sets.\medskip
+Suppose we had a large number of data sets each of size $N$ and each drawn independently from the distribution $p(\boldsymbol{x}, \boldsymbol{y})$. For any given data set $D$, we can run our learning algorithm and obtain a prediction function $\hat{f}(\boldsymbol{x}; D)$. Different data sets from the ensemble will give different functions and consequently different values of the squared loss. The performance of a particular learning algorithm is then assessed by taking the average over this ensemble of data sets.\medskip
 
 Consider the integrand of the first term in Eq. 4.3, which for a particular data set $D$ takes the form:
 \begin{equation*}
@@ -269,13 +274,97 @@ where:
 \begin{aligned}
     &\text{(bias)}^2 = \int \{\mathbb{E}_D[\hat{f}(\boldsymbol{x}; D)] - h(\boldsymbol{x})\}^2 p(\boldsymbol{x})d\boldsymbol{x}\\
     &\text{variance} = \int \mathbb{E}_D[\{\hat{f}(\boldsymbol{x}; D) - \mathbb{E}_D[\hat{f}(\boldsymbol{x}; D)]\}^2] p(\boldsymbol{x})d\boldsymbol{x}\\
-    &\text{noise} = \int\{ h(\boldsymbol{x}) - y\}^2p(\boldsymbol{x}, y)d\boldsymbol{x}dy
+    &\text{noise} = \int\{ h(\boldsymbol{x}) - \boldsymbol{y}\}^2p(\boldsymbol{x}, \boldsymbol{y})d\boldsymbol{x}d\boldsymbol{y}
 \end{aligned}
 \end{equation*}
 and the bias and variance terms now refer to integrated quantities.\medskip
 
 Our goal is to minimize the expected loss, which we have decomposed into the sum of a (squared) bias, a variance, and a constant noise term. As we shall see, there is a trade-off between bias and variance, with very flexible models having low bias and high variance, and relatively rigid models having high bias and low variance. The model with the optimal predictive capability is the one that leads to the best balance between bias and variance.\\
-Although the bias-variance decomposition may provide some interesting in- sights into the model complexity issue from a frequentist perspective, it is of lim- ited practical value, because the bias-variance decomposition is based on averages with respect to ensembles of data sets, whereas in practice we have only the single observed data set. If we had a large number of independent training sets of a given size, we would be better off combining them into a single large training set, which of course would reduce the level of over-fitting for a given model complexity.
+Although the bias-variance decomposition may provide some interesting insights into the model complexity issue from a frequentist perspective, it is of limited practical value, because the bias-variance decomposition is based on averages with respect to ensembles of data sets, whereas in practice we have only the single observed data set. If we had a large number of independent training sets of a given size, we would be better off combining them into a single large training set, which of course would reduce the level of over-fitting for a given model complexity.
+
+\subsection{Shrinkage Methods}
+
+\subsubsection{Ride regression}
+
+Ridge regression shrinks the regression coefficients by imposing a penalty on their size. The ridge coefficients minimize a penalized residual sum of squares
+\begin{equation*}
+    \hat{\boldsymbol{\theta}}^\text{ridge} = \argmin\limits_\theta\{\sum\limits_{i = 1}^{N}(\boldsymbol{y_i} - \theta_0 - \sum\limits_{j = 1}^{p}\boldsymbol{x_{i, j}}\theta_j)^2 + \lambda\sum\limits_{j = 1}^{p}\theta_j^2\}
+\end{equation*}
+Here $\lambda \geq 0$ is a complexity parameter that controls the amount of shrinkage: the larger the value of $\lambda$, the greater the amount of shrinkage. The coefficients are shrunk toward zero (and each other).\\
+The ridge solutions are not equivariant under scaling of the inputs, and so one normally standardizes the inputs before solving for $\boldsymbol{\theta}$.\\
+In addition, notice that the intercept $\theta_0$ has been left out of the penalty term. Penalization of the intercept would make the procedure depend on the origin
+chosen for $\boldsymbol{Y}$; that is, adding a constant $c$ to each of the targets $\boldsymbol{y_i}$ would
+not simply result in a shift of the predictions by the same amount $c$. \\
+Writing the RSS in matrix form we obtain
+\begin{equation*}
+    \text{RSS}(\lambda) = (\boldsymbol{Y} - \boldsymbol{X\theta})^\intercal(\boldsymbol{Y} - \boldsymbol{X\theta}) + \lambda\boldsymbol{\theta}^\intercal\boldsymbol{\theta}
+\end{equation*}
+The ridge regression solutions are easily seen to be
+\begin{equation}
+    \theta^{\text{ridge}} = (\boldsymbol{X^\intercal{X}} + \lambda\mathds{1})\boldsymbol{X}^\intercal\boldsymbol{Y}
+\end{equation}
+Notice that with the choice of quadratic penalty $\boldsymbol{\theta^\intercal\theta}$, the ridge regression solution is again a linear function of $\boldsymbol{Y}$. The solution adds a positive constant to the diagonal of $\boldsymbol{X^\intercal{X}}$ before inversion. This makes the problem nonsingular, even if $\boldsymbol{X^\intercal{X}}$ is not of full rank.\medskip
+
+Ridge regression can also be derived as the mean or mode of a posterior distribution, with a suitably chosen prior distribution. In detail, suppose $y_i \sim \mathcal{N}(\boldsymbol{x_i\theta}, \sigma^2)$, and the parameters $\theta_j$ are each distributed as $\mathcal{N}(0, \tau^2)$, independently of one another.\\ Then the (negative) log-posterior density of $\boldsymbol{\theta}$, with $\tau^2$ and $\sigma^2$ assumed known, is equal to the Eq.4.4, with $\lambda = \sigma^2 / \tau^2$. Thus the ridge estimate is the mode of the posterior distribution; since the distribution is Gaussian, it is also the posterior mean.\medskip
+
+The singular value decomposition (SVD) of the centered input matrix $\boldsymbol{X}$ gives us some additional insight into the nature of ridge regression.\\
+The SVD of the $N \times p$ matrix $\boldsymbol{X}$ has the form
+\begin{equation*}
+    \boldsymbol{X} = \boldsymbol{UDV^\intercal}
+\end{equation*}
+Here $\boldsymbol{U}$ and $\boldsymbol{V}$ are $N\times p$ and $p \times p$ orthogonal matrices, with the columns of $\boldsymbol{U}$ spanning the column space of $\boldsymbol{X}$, and the columns of $\boldsymbol{V}$ spanning the row space. $\boldsymbol{D}$ is a $p \times p$ diagonal matrix, with diagonal entries $d_1 \geq d_2 \geq ... \geq d_p \geq 0$ called the singular values of $\boldsymbol{X}$. If one or more values $d_j = 0$, $\boldsymbol{X}$ is singular.\\
+Using the singular value decomposition we can write the least squares fitted vector as
+\begin{equation*}
+    \boldsymbol{X\hat{\theta}}^\text{ls} = \boldsymbol{X}(\boldsymbol{X^\intercal X})^{-1}\boldsymbol{X^\intercal Y} = \boldsymbol{UDV^\intercal}(\boldsymbol{VD}^2\boldsymbol{V}^\intercal)^{-1}\boldsymbol{VDU^\intercal Y} = \boldsymbol{UU^\intercal Y}
+\end{equation*}
+Note that $\boldsymbol{U^\intercal}Y$ are the coordinates of $\boldsymbol{Y}$ with respect to the orthonormal basis $\boldsymbol{U}$.\\
+Now the ridge solutions are
+\begin{equation*}
+\begin{aligned}
+    \boldsymbol{X}\hat{\boldsymbol{\theta}}^\text{ridge} &= \boldsymbol{X}(\boldsymbol{X^\intercal X} + \lambda\mathds{1})^{-1}\boldsymbol{X^\intercal Y} \\
+    &= \boldsymbol{UD}(\boldsymbol{D}^2 + \lambda\mathds{1})^{-1}\boldsymbol{DU^\intercal Y}\\
+    &= \sum\limits_{j = 1}^{p}\boldsymbol{u}_j\frac{d_j^2}{d_j^2 + \lambda}\boldsymbol{u}_j^\intercal \boldsymbol{Y}
+\end{aligned}
+\end{equation*}
+where the $\boldsymbol{u}_j$ columns are the columns of $\boldsymbol{U}$. Note that since $\lambda \geq 0$ we have $d_j^2 /(d_j^2 + \lambda) \leq 1$.  Like linear regression, ridge regression computes the coordinates of $\boldsymbol{Y}$ with respect to the orthonormal basis $\boldsymbol{U}$. It then shrinks these coordinates by the factors $d_j^2 /(d_j^2 + \lambda)$. This means that a greater amount of shrinkage is applied to the coordinates of basis vectors with smaller $d_j^2$.\\
+The small singular values $d_j$ correspond to directions in the column space of $\boldsymbol{X}$ having small variance, and ridge regression shrinks these directions the most.\\
+Ridge regression protects against the potentially high variance of gradients estimated in the short directions. The implicit assumption is that the response will tend to vary most in the directions of high variance of the inputs. This is often a reasonable assumption, since predictors are often chosen for study because they vary with the response variable, but need not hold in general.
+\subsubsection{The Lasso}
+The lasso is a shrinkage method like ridge, with subtle but important differences. The lasso estimate is defined by
+\begin{equation*}
+    \hat{\boldsymbol{\theta}}^\text{lasso} = \argmin\limits_\theta \sum\limits_{i = 1}^{N}(\boldsymbol{y_i} - \theta_0 - \sum\limits_{j = 1}^{p}\boldsymbol{x_{i, j}}\theta_j)^2
+\end{equation*}
+\begin{equation*}
+    \text{subject to} \hspace{3pt} \sum\limits_{j = 1}^{p}|\theta_j| \leq t
+\end{equation*}
+We can also write the lasso problem in the equivalent Lagrangian form
+\begin{equation*}
+    \hat{\boldsymbol{\theta}}^\text{lasso} = \argmin\limits_\theta\{\sum\limits_{i = 1}^{N}(\boldsymbol{y_i} - \theta_0 - \sum\limits_{j = 1}^{p}\boldsymbol{x_{i, j}}\theta_j)^2 + \lambda\sum\limits_{j = 1}^{p}|\theta_j|\}
+\end{equation*}
+Notice the similarity to the ridge regression problem: the $L_2$ ridge penalty $\sum\limits_{j = 1}^{p}\theta_j^2$ is replaced by the $L_1$ lasso penalty $\sum\limits_{j = 1}^{p}|\theta_j|$. This latter constraint makes the solutions nonlinear in the $\boldsymbol{y_i}$, and there is no closed form expression as in ridge regression.\\
+Because of the nature of the constraint, making $t$ sufficiently small will cause some of the coefficients to be exactly zero. Thus the lasso does a kind of continuous subset selection. If $t$ is chosen larger than $t_0 = \sum\limits_{j = 1}^{p}|\theta_j|$ (where $\hat{\theta_j} = \hat{\theta_j}^{\text{ls}} $ , the least squares estimates), then the lasso estimates are the $\hat{\theta_j}$’s. On the other hand, for $t = t_0 / 2$ say, then the least squares coefficients are shrunk by about 50\% on average. Like the penalty parameter in ridge regression, $t$ should be adaptively chosen to minimize an estimate of expected prediction error.
+
+\subsubsection{Ridge vs. Lasso Estimation}
+
+\begin{figure}[ht]
+\caption{Estimation picture for the lasso (left) and ridge regression (right). Shown are contours of the error and constraint functions. The solid blue areas are the constraint regions $|\beta_1| + |\beta_2| \leq t$ and $\beta_1^2 + \beta_2^2 \leq t^2$, respectively, while the red ellipses are the contours of the least squares error function.}
+\centering
+\includegraphics[width=0.6\textwidth]{img/ridge_vs_lasso.png}
+\end{figure}
+Figure 4.3 depicts the lasso (left) and ridge regression (right) when there are only two parameters. The residual sum of squares has elliptical contours, centered at the full least squares estimate. The constraint region for ridge regression is the disk $\beta_1^2 + \beta_2^2 \leq t^2$, while that for lasso is the diamond $|\beta_1| + |\beta_2| \leq t$. Both methods find the first point where the elliptical contours hit the constraint region. Unlike the disk, the diamond has corners; if the solution occurs at a corner, then it has one parameter $\beta_j$ equal to zero. When $p > 2$, the diamond becomes a rhomboid, and has many corners, flat edges and faces; there are many more opportunities for the estimated parameters to be zero.
+We can generalize ridge regression and the lasso, and view them as Bayes estimates. Consider the criterion for $q \geq 0$.
+\begin{equation*}
+    \Tilde{\boldsymbol{\beta}} = \argmin\limits_\beta\{\sum\limits_{i = 1}^{N}(\boldsymbol{y_i} - \beta_0 - \sum\limits_{j = 1}^{p}\boldsymbol{x_{i, j}}\beta_j)^2 + \lambda\sum\limits_{j = 1}^{p}|\beta_j|^q\}
+\end{equation*}
+
+\begin{figure}[ht]
+\caption{Contours of constant value of $\sum\limits_{j = 1}^{p}|\beta_j|^q$ for given values of $q$.}
+\centering
+\includegraphics[width=0.8\textwidth]{img/gen_reg.png}
+\end{figure}
+
+Thinking of $|\beta_j|^q$ as the log-prior density for $\beta_j$, these are also the equicontours of the prior distribution of the parameters. The value $q = 1$ corresponds to the lasso, while $q = 2$ to ridge regression. Notice that for $q \leq 1$, the prior is not uniform in direction, but concentrates more mass in the coordinate directions. The prior corresponding to the $q = 1$ case is an independent double exponential (or Laplace) distribution for each input, with density $(1 / 2\tau)\exp(-|\boldsymbol{\beta}/\tau)$ and $\tau = 1 / \lambda$. The case $q = 1$ (lasso) is the smallest $q$ such that the constraint region is convex; non-convex constraint regions make the optimization problem more difficult.\\
+In this view, the lasso and ridge regression are Bayes estimates with different priors. Note, however, that they are derived as posterior modes, that is, maximizers of the posterior. It is more common to use the mean of the posterior as the Bayes estimate. Ridge regression is also the posterior mean, but the lasso is not.
 
 \section{MLE Regression with Gaussian Noise}
 Assumption: noise comes from a zero-mean Gaussian distribution with variance $\sigma^2$, i.e $\epsilon \sim \mathcal{N}(0, \sigma^2)$.\\
@@ -313,7 +402,7 @@ That is, after finding $\boldsymbol{\theta}^{\text{MLE}}$ if we have a query inp
 \begin{equation*}
     \mathbb{P}(y_{\text{pred}}|\:\boldsymbol{x_{\text{pred}}}, \boldsymbol{\theta^{\text{MLE}}}, \sigma^2) = \mathcal{N}(\boldsymbol{x_{\text{pred}}}^{\intercal}\boldsymbol{\theta^{\text{MLE}}}, \sigma^2)
 \end{equation*}
-We can start by assuming that we have already computed $\boldsymbol{\theta}^{\text{MLE}}$, in order to calculate $\sigma^2$ we set up the problem the same way except we keep the additive term in Eq. 4.4:
+We can start by assuming that we have already computed $\boldsymbol{\theta}^{\text{MLE}}$, in order to calculate $\sigma^2$ we set up the problem the same way except we keep the additive term in Eq. 4.5:
 \begin{equation*}
     \sigma^{\text{MLE}} = \argmax_{\sigma}\left\{ -\frac{N}{2}\log(2\sigma^2\pi) -\frac{1}{2\sigma^2}(\boldsymbol{X\theta} - \boldsymbol{Y})^{\intercal}(\boldsymbol{X\theta} - \boldsymbol{Y}) \right\}
 \end{equation*}

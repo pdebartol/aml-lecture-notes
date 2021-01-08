@@ -188,7 +188,7 @@ $$\mathbb{E}_{x|\theta}[\Lambda] = \int_{x} p(x|\theta) \Lambda \; dx= \int_{x} 
 $$\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}]= \int_{x} p(x|\theta) \Lambda \hat{\theta} \; dx = \int_{x} \dfrac{\partial}{\partial{\theta}} p(x|\theta) \hat{\theta} \; dx
 = \dfrac{\partial}{\partial{\theta}} \int_{x} p(x|\theta) \hat{\theta} \; dx = \dfrac{\partial}{\partial{\theta}} \mathbb{E}_{x|\theta}[\hat{\theta}] = \dfrac{\partial}{\partial{\theta}} (\mathbb{E}_{x|\theta}[\hat{\theta}]-\theta) + 1 =\dfrac{\partial}{\partial{\theta}} b_{\hat{\theta}}+1 $$
 
-Consider the cross-correlation between $\Lambda$ and $\hat{\theta}$:
+Consider the covariance between $\Lambda$ and $\hat{\theta}$:
 $$\Big(\mathbb{E}_{x|\theta}\big[ (\Lambda - \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0}) (\hat{\theta} - \mathbb{E}_{x|\theta}[\hat{\theta}\big])] \Big)^2 = \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] - \mathbb{E}_{x|\theta}\big[ \Lambda \mathbb{E}_{x|\theta}[\hat{\theta}]  
 \big] \Big)^2 = \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] -  \overbrace{\mathbb{E}_{x|\theta}[\Lambda]}^{=0} \mathbb{E}_{x|\theta}[\hat{\theta}
 \big] \Big)^2 =  \Big(\mathbb{E}_{x|\theta}[\Lambda \hat{\theta}] \Big)^2$$

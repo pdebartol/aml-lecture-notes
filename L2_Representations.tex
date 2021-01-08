@@ -198,7 +198,7 @@ Assume that two datasets $\mathcal{X}',\mathcal{X}''  \sim p(x',x'') = p(x')p(x'
 
 $$\mathbb{E}_{\mathcal{X}' \mathcal{X}''}\Big[ \sum_{c \in \mathcal{C}} p(c|x')\mathcal{R}(c,x'') \Big] = \sum_{\mathcal{X}'}\sum_{\mathcal{X}''} p(x'') \sum_{c \in \mathcal{C}} p(c,x')\mathcal{R}(c,x'')= \sum_{c \in \mathcal{C}} p(c) \mathbb{E}_{\mathcal{X}''}\big[ \mathcal{R}(c,x'') \big]$$
 
-One might argue that minimizing the expected risk is not the optimal inference principle for validating $\mathcal{R}$. The problem is that $\mathcal{R}$ is particularly large when you're far away from the minimum and that's exactly when you expect $p(c)$ to be very small because solutions which give you an high cost on the test data presumably should be rare also on the train data. Thus, the situation is  unstable, you multiply a very large cost value with a very small probability ($0 \cdot \infty$). From an information-theory point of view, score-maximization is a better principle; however, risk-minimization leads to convex problems that are computationally more feasible.
+One might argue that minimizing the expected risk is not the optimal inference principle for validating $\mathcal{R}$. The problem is that $\mathcal{R}$ is particularly large when you are far away from the minimum and that is exactly when you expect $p(c)$ to be very small because solutions which give you an high cost on the test data presumably should be rare also on the train data. Thus, the situation is  unstable, you multiply a very large cost value with a very small probability ($0 \cdot \infty$). From an information-theory point of view, score-maximization is a better principle; however, risk-minimization leads to convex problems that are computationally more feasible.
 
 \subsection{Quality of the estimate}
 
@@ -219,7 +219,7 @@ Given the random variable $X$ the conditional expected risk is defined as:
 \end{center}
 \textbf{Expected true risk}:
 \begin{center}
-    $R_{true}(f,x) = \underset{p}{\mathbb{E}}[L(f(x), y)] = \int_x\int_y L(f(x), y)P(x, y) dx dy$
+    $R_{true}(f) = \underset{p}{\mathbb{E}}[L(f(x), y)] = \int_x\int_y L(f(x), y)P(x, y) dx dy$
 \end{center}
 Where $p$ is the true distribution over the inputs $x$ and $y$. The risk measures how much error we have, on average,  using $f$ as our prediction algorithm.
 \newpage
@@ -270,9 +270,9 @@ Since the data comes from $p$, we should be able to get a reasonable approximati
     $\underset{p}{\mathbb{E}}[L(f(x), y)] \approx \hat{\mathbb{E}}[L(f(x), y)]$
 \end{center}
 The right hand side of the equation is called the \textbf{empirical risk}.
-\begin{center}
-    $R(f) = \hat{\mathbb{E}}[L(f(x), y)]$
-\end{center}
+\begin{equation*}
+    R(f) = \hat{\mathbb{E}}[L(f(x), y)] = \frac{1}{n}\sum\limits_{i = 1}^{n}L(f(x_i), y_i)
+\end{equation*}
 Picking the function $f^*$ that minimizes it is known as \textbf{Empirical Risk Minimization}.
 \begin{equation*}
     f^* = \argmin_{f \in C} R(f)
@@ -297,7 +297,7 @@ So why not use a small set of "simple" functions? It is true, this will lead to 
 This phenomenon is called \textbf{Bias-Variance Trade-off}.\\
 When used in practice, it is usually necessary to perform some sort of model selection or regularization to make empirical risk minimization generalize well to new data.\medskip
 
-In fact, what usually happens is that the samples are split into training data and test data. Additional validation data is used to guide the estimator selection.\\
+In practice, what usually happens is that the samples are split into training data and test data. Additional validation data is used to guide the estimator selection.\\
 Test data cannot be used before the final estimator has been selected.
 \begin{equation*}
     \mathcal{Z}^{train} = \{(x_1, y_1),...,(x_n, y_n)\}\\
@@ -395,7 +395,7 @@ A pair of objects $(X, d)$ consisting of a non-empty set $X$ and a function $d: 
 \end{enumerate}
 The function $d$ is called a distance function or metric on $X$ and the set $X$ is called the underlying set.
 \end{definition}
-\textbf{Example:} $(\mathbb{R}, d)$ is a metric space, where $d$ is the function defined by $d(a,b) = |a-b| \: \forall a,b \in \mathbb{R}$.
+\textbf{Example:} $(\mathbb{R}, d)$ is a metric space, where $d$ is the function defined by $d(a,b) = |a-b|, \forall a,b \in \mathbb{R}$.
 \begin{definition} \textbf{Scalar Product}
 Let $X$ be a non-empty set and $\mathcal{V} = (X,+,\cdot)$ a vector space. A function $\phi : X \times X \rightarrow \mathbb{R}$ which assigns two vectors $\boldsymbol{x}, \boldsymbol{y} \in \mathcal{V}$ a real number is called \textbf{scalar product} on $\mathcal{V}$ if the following properties hold:
 \renewcommand{\theenumi}{\Roman{enumi}}
