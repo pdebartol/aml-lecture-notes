@@ -219,7 +219,7 @@ Given the random variable $X$ the conditional expected risk is defined as:
 \end{center}
 \textbf{Expected true risk}:
 \begin{center}
-    $R_{true}(f,x) = \underset{p}{\mathbb{E}}[L(f(x), y)] = \int_x\int_y L(f(x), y)P(x, y) dx dy$
+    $R_{true}(f) = \underset{p}{\mathbb{E}}[L(f(x), y)] = \int_x\int_y L(f(x), y)P(x, y) dx dy$
 \end{center}
 Where $p$ is the true distribution over the inputs $x$ and $y$. The risk measures how much error we have, on average,  using $f$ as our prediction algorithm.
 \newpage
@@ -270,9 +270,9 @@ Since the data comes from $p$, we should be able to get a reasonable approximati
     $\underset{p}{\mathbb{E}}[L(f(x), y)] \approx \hat{\mathbb{E}}[L(f(x), y)]$
 \end{center}
 The right hand side of the equation is called the \textbf{empirical risk}.
-\begin{center}
-    $R(f) = \hat{\mathbb{E}}[L(f(x), y)]$
-\end{center}
+\begin{equation*}
+    R(f) = \hat{\mathbb{E}}[L(f(x), y)] = \frac{1}{n}\sum\limits_{i = 1}^{n}L(f(x_i), y_i)
+\end{equation*}
 Picking the function $f^*$ that minimizes it is known as \textbf{Empirical Risk Minimization}.
 \begin{equation*}
     f^* = \argmin_{f \in C} R(f)

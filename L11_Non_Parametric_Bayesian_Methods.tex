@@ -214,7 +214,7 @@ Second, we draw an infinity of $\mu_{k} \sim \mathcal{N}\Big(\mu_{0}, \Sigma_{0}
     \includegraphics[width=0.3\textwidth]{img/us.png}
 \end{figure}
 
-The resulting distribution is $G= \sum_{k=1}^{\infty} \rho_{k} \delta{\mu_{k}} = DP\Big(\alpha, \mathcal{N}(\mu_{0}, \Sigma_{0})\Big)$. We have successfuly constructed a Dirichlet Process. 
+The resulting distribution is $G= \sum_{k=1}^{\infty} \rho_{k} \delta{\mu_{k}} = DP\Big(\alpha, \mathcal{N}(\mu_{0}, \Sigma_{0})\Big)$. We have successfully constructed a Dirichlet Process. 
 
 
 To generate data from this model, we can sample $z_{n} \sim Categorical(\rho)$ and $\mu_{n} = \mu_{z_{n}}$  i.e. $\mu_{n} \sim G$. Next, we sample the data point from $x_{n} \sim \mathcal{N}(\mu_{n}, \Sigma_{0})$.

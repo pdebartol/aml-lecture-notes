@@ -147,7 +147,7 @@ This matrix, with $(i, j)$-th entry equal to $k(\boldsymbol{x_i}, \boldsymbol{x_
 \end{definition}
 
 \begin{theorem}
-Two above two definitions are equivalent. That is, $k$ is a kernel function if and only if it is symmetric PSD.
+The above two definitions are equivalent. That is, $k$ is a kernel function if and only if it is symmetric PSD.
 \end{theorem}
 \begin{proof}
 The “only if” part is easy to show (at least when $\phi$ is finite-dimensional): The inner product is certainly symmetric, and the Gram matrix can be written as $\boldsymbol{K = \Phi^\intercal\Phi}$, where $\boldsymbol{\Phi} \in \mathbb{R}^{\text{dim}(\boldsymbol{\Phi}) \times m}$ contains the $m$ feature vectors $\{\boldsymbol{\phi(x_t)}\}_{t = 1}^{m}$ as columns. The matrix $\boldsymbol{K = \Phi^\intercal\Phi}$  is trivially positive semidefinite, since for any $\boldsymbol{z}$ we have $\boldsymbol{z^\intercal\Phi^\intercal\Phi z} = \boldsymbol{\norm{\Phi z}^2} \geq 0$.\medskip
@@ -222,7 +222,7 @@ and will write the Gaussian process as
 \end{equation*}
 Usually, for notation simplicity we will take the mean function to be zero, although this need not to be done.\medskip
 
-In our case the random variables represent the value of the function $f(\boldsymbol{x})$ at location $\boldsymbol{x}$. For notational convenience we use the (arbitrary) enumeration of the cases in the training set to identify the random variables such that $f_i \triangleq = f(\boldsymbol{x}_i)$ is the random variable corresponding to the case $(\boldsymbol{x_i}, y_i)$ as would expected.\medskip
+In our case the random variables represent the value of the function $f(\boldsymbol{x})$ at location $\boldsymbol{x}$. For notational convenience we use the (arbitrary) enumeration of the cases in the training set to identify the random variables such that $f_i \triangleq  f(\boldsymbol{x}_i)$ is the random variable corresponding to the case $(\boldsymbol{x_i}, y_i)$ as would expected.\medskip
 
 A GP is defined as a collection of random variables. Thus, the definition automatically implies a \textit{consistency} requirement, which is also sometimes known as the marginalization property. This property simply means that if the GP e.g specifies $(y_1, y_2) \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$, then it must also specify $y_1 = \mathcal{N}(\mu_1, \Sigma_{11})$ where $ \Sigma_{11}$ is the relevant submatrix of $\Sigma$.\\
 In other words, examination of a larger set of variables does not change the distribution of the smaller set. Notice that the consistency requirement is automatically fulfilled if the covariance function specifies entries of the covariance matrix. The definition does not exclude Gaussian processes with finite index sets (which would be simply Gaussian \textit{distributions}), but there are not particularly interesting for our purposes.\medskip
@@ -234,7 +234,7 @@ A simple example of a GP can be obtained from a Bayesian regression model $f(\bo
 \begin{equation*}
     \mathbb{E}[f(\boldsymbol{x})f(\boldsymbol{x'})] = \boldsymbol{\phi(x)}^\intercal\mathbb{E}[\boldsymbol{ww^\intercal}]\boldsymbol{\phi(x')} = \boldsymbol{\phi(x)}^\intercal\Sigma_p\boldsymbol{\phi(x')}
 \end{equation*}
-Thus $f(\boldsymbol{x})$ and $f(\boldsymbol{x'})$ are jointly Gaussian with zero mean and covariance given by $\boldsymbol{\phi(x)}^\intercal\Sigma_p\boldsymbol{\phi(x')}$. Indeed, the function values $f(\boldsymbol{x}_1,...,f(\boldsymbol{x}_n))$ corresponding to any number of input points $n$ are jointly Gaussian, although if $N < n$ then this Gaussian is singular (as the joint covariance matrix will be of rank $N$).\medskip
+Thus $f(\boldsymbol{x})$ and $f(\boldsymbol{x'})$ are jointly Gaussian with zero mean and covariance given by $\boldsymbol{\phi(x)}^\intercal\Sigma_p\boldsymbol{\phi(x')}$. Indeed, the function values $f(\boldsymbol{x}_1),...,f(\boldsymbol{x}_n)$ corresponding to any number of input points $n$ are jointly Gaussian, although if $N < n$ then this Gaussian is singular (as the joint covariance matrix will be of rank $N$).\medskip
 
 Our running example of a covariance function will be the \textit{squared exponential}(SE) covariance function that specifies the covariance between pairs of random variables
 \begin{equation}
@@ -282,7 +282,7 @@ It is typical for more realistic modelling situations that we do not have access
 \begin{equation*}
     \text{cov}(y_p, y_q) = k(x_p, x_q) + \sigma^2_n\delta_{pq} \hspace{8pt}\text{or}\hspace{8pt} \text{cov}(\boldsymbol{y}) = K(X, X) + \sigma^2\mathds{1}
 \end{equation*}
-where $\delta_{pq}$ is a Kronecker delta which is one iff $p = q$ and zero otherwise. It follows from the independence assumption about noise, that a diagonal matrix is added, in comparison to the noise free case, Eq.5.1. Introducing the noise term we can write the joint distribution of the observed target values and the function values at the test locations under the prior as
+where $\delta_{pq}$ is a Kronecker delta which is one if $p = q$ and zero otherwise. It follows from the independence assumption about noise, that a diagonal matrix is added, in comparison to the noise free case, Eq.5.1. Introducing the noise term we can write the joint distribution of the observed target values and the function values at the test locations under the prior as
 \begin{equation*}
     \begin{bmatrix*}[l]
 \boldsymbol{y}\\
