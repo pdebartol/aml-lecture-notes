@@ -159,7 +159,7 @@ As with the linear regression models, it is sometimes convenient to use a more c
 \begin{equation*}
     y(\boldsymbol{x}) = \Tilde{\boldsymbol{w}}^\intercal\Tilde{\boldsymbol{x}}
 \end{equation*}
-In this case, the decision surface are $D$-dimensional hyperplanes passing through the origin of the $D + 1$-dimensional expanded input space. 
+In this case, the decision surface are $D$-dimensional hyperplanes passing through the origin of the $(D + 1)$-dimensional expanded input space. 
 \newpage
 \subsection{Multiple classes}
 Now consider the extension of linear discriminants to $K > 2$ classes. We might be tempted to build a $K$-class discriminant by combining a number of two-class discriminant functions. However, this leads to some serious difficulties.\\
@@ -186,9 +186,9 @@ This has the same form as the decision boundary for the two-class case and so an
 
 \subsection{Fisher’s linear discriminant}
 One way to view a linear classification model is in terms of dimensionality reduction. Consider first the case of two classes, and suppose we take the $D$-dimensional input vector $\boldsymbol{x}$ and project it down to one dimension using
-\begin{equation*}
+\begin{equation}
     y = \boldsymbol{w^\intercal x}
-\end{equation*}
+\end{equation}
 If we place a threshold on $y$ and classify $y \geq -w_0$ as class $\mathcal{C}_1$, and otherwise class $\mathcal{C}_2$, then we obtain our standard linear classifier.\\
 In general, the projection onto one dimension leads to a considerable loss of information, and classes that are well separated in the original $D$-dimensional space may become strongly overlapping in one dimension. However, by adjusting the components of the weight vector $\boldsymbol{w}$, we can select a projection that maximizes the class separation. To begin with, consider a two-class problem in which there are $N_1$ points of $\mathcal{C}_1$ and $N_2$ points of class $\mathcal{C}_2$, so that the mean vectors of the two classes are given by
 \begin{equation*}
@@ -201,9 +201,9 @@ The simplest measure of the separation of the classes when projected onto $\bold
     m_2 - m_1 = \boldsymbol{w}^\intercal(\boldsymbol{m}_2 - \boldsymbol{m}_1)
 \end{equation*}
 where 
-\begin{equation*}
+\begin{equation}
     m_k = \boldsymbol{w}^\intercal\boldsymbol{m}_k
-\end{equation*}
+\end{equation}
 is the mean of the projected data from class $\mathcal{C}_k$. However, this expression can be arbitrarily large simply by increasing the magnitude of $\boldsymbol{w}$. To solve this problem we could constrain $\boldsymbol{w}$ to have unit length, so that $\sum_i w_i^2 = 1$. Using a Lagrange multiplier to perform the constrained maximization, we then find that $\boldsymbol{w} \propto (\boldsymbol{m}_2 - \boldsymbol{m}_1)$. \\
 There is still a problem with this approach, however, as illustrated in Figure 6.3. This shows two classes that are well separated in the original two- dimensional space $(x_1, x_2)$ but that have considerable overlap when projected onto the line joining their means. This difficulty arises from the strongly non-diagonal covariances of the class distributions. The idea proposed by Fisher is to maximize a function that will give a large separation between the projected class means while also giving a small variance within each class, thereby minimizing the class overlap.
 \newpage
@@ -212,4 +212,132 @@ There is still a problem with this approach, however, as illustrated in Figure 6
     \includegraphics[width=0.70\textwidth]{img/fisher.png}
     \caption{The left plot shows samples from two classes (depicted in red and blue) along with the histograms resulting from projection onto the line joining the class means. Note that there is considerable class overlap in the projected space. The right plot shows the corresponding projection based on the Fisher linear discriminant, showing the greatly improved class separation.}
 \end{figure}
+The projection formula 6.2 transforms the set of labelled data points in $\boldsymbol{x}$ into a labelled set in the one-dimensional space $y$. The within-class variance of the transformed data from $\mathcal{C}_k$ is therefore given by
+\begin{equation}
+    s_k^2 = \sum\limits_{n \in \mathcal{C}_k}(y_n - m_k)^2
+\end{equation}
+where $y_n = \boldsymbol{w^\intercal x}_n$. We can define the total within-class variance for the whole data set to be simply $s_1^2 + s_2^2$. The fisher criterion is defined to be the ratio of the between-class variance to the within-class variance and is given by
+\begin{equation*}
+    J(\boldsymbol{w}) = \frac{(m_2 - m_1)^2}{s_1^2 + s_2^2}
+\end{equation*}
+We can make the dependence on $\boldsymbol{w}$ explicit by using 6.2, 6.3 and 6.4 to rewrite the Fisher criterion in the form
+\begin{equation}
+    J(\boldsymbol{w}) = \frac{\boldsymbol{w}^\intercal\textbf{S}_\text{B}\boldsymbol{w}}{\boldsymbol{w}^\intercal\textbf{S}_\text{W}\boldsymbol{w}}
+\end{equation}
+where $\textbf{S}_\text{B}$ is the between-class covariance matrix and is given by
+\begin{equation}
+    \textbf{S}_\text{B} = (\boldsymbol{m}_2 - \boldsymbol{m}_1)(\boldsymbol{m}_2 - \boldsymbol{m}_1)^\intercal
+\end{equation}
+and $\textbf{S}_\text{W}$ is the total within-class covariance matrix, given by
+\begin{equation*}
+    \textbf{S}_\text{W} = \sum\limits_{n \in \mathcal{C}_1}(\boldsymbol{x}_n - \boldsymbol{m}_1)(\boldsymbol{x}_n - \boldsymbol{m}_1)^\intercal + \sum\limits_{n \in \mathcal{C}_2}(\boldsymbol{x}_n - \boldsymbol{m}_2)(\boldsymbol{x}_n - \boldsymbol{m}_2)^\intercal 
+\end{equation*}
+Differentiating 6.5 with respect to $\boldsymbol{w}$, we find that $J(\boldsymbol{w})$ is maximized when
+\begin{equation}
+    (\boldsymbol{w}^\intercal\textbf{S}_\text{B}\boldsymbol{w})\textbf{S}_\text{W}\boldsymbol{w} = (\boldsymbol{w}^\intercal\textbf{S}_\text{W}\boldsymbol{w})\textbf{S}_\text{B}\boldsymbol{w}
+\end{equation}
+From 6.6, we see that $\textbf{S}_\text{B}\boldsymbol{w}$ is always in the direction of $(\boldsymbol{m}_2 - \boldsymbol{m}_1)$. Furthermore we do not care about the magnitude of $\boldsymbol{w}$, only its direction, and so we can drop the scalar factors $(\boldsymbol{w}^\intercal\textbf{S}_\text{B}\boldsymbol{w})$ and $(\boldsymbol{w}^\intercal\textbf{S}_\text{W}\boldsymbol{w})$. Multiplying both sides of 6.7 by $\textbf{S}_\text{W}^{-1}$ we then obtain
+\begin{equation*}
+    \boldsymbol{w} \propto \textbf{S}_\text{W}^{-1}(\boldsymbol{m}_2 - \boldsymbol{m}_1)
+\end{equation*}
+The projected data can be subsequently used to construct a discriminant, by choosing a threshold $y_0$ so that we classify a new point as belonging to $\mathcal{C}_1$ if $y(\boldsymbol{x}) \geq y_0$ and classify it as belonging to $\mathcal{C}_2$ otherwise.\\
+We can also model the class-conditional densities $p(y|\mathcal{c}_K)$ using Gaussian distributions and then use MLE to find the parameters of the distributions. Some justification for the Gaussian assumption comes from the central limit theorem by noting that $y = \boldsymbol{w^\intercal x}$ is the sum of a set of random variables.
+\newpage
+\subsection{The Perceptron algorithm}
+Another example of a linear discriminant model is the perceptron that corresponds to a two-class model in which the input vector $\boldsymbol{x}$ is first transformed using a fixed nonlinear transformation to give a feature vector $\boldsymbol{\phi}(\boldsymbol{x})$, and this is then used to construct a generalized linear model of the form 
+\begin{equation}
+    y(\boldsymbol{x}) = f(\boldsymbol{w^\intercal}\boldsymbol{\phi}(\boldsymbol{x}))
+\end{equation}
+where the non-linear activation function $f(\cdot)$ is given by a step function of the form
+\begin{equation*}
+f(a) =
+\begin{cases}
+    +1,\hspace{5pt} a \geq 0\\
+    -1,\hspace{5pt} a < 0
+\end{cases}
+\end{equation*}
+The vector $\boldsymbol{\phi}(\boldsymbol{x})$ will typically include bias component $\phi_0(\boldsymbol{x}) = 1$. The target values $t$ are +1 for class $\mathcal{C}_1$ and -1 for class $\mathcal{C}_2$.\\
+The algorithm used to determine the parameters $\boldsymbol{w}$ of the perceptron can most easily be motivated by error function minimization. A natural choice of error function would be the total number of misclassified patterns. However, this does not lead to a simple algorithm because the error is a piecewise constant function of $\boldsymbol{w}$, with discontinuities wherever a change in $\boldsymbol{w}$ causes the decision boundary to move across one of the data points. Methods based on changing $\boldsymbol{w}$ using the gradient of the error function cannot then be applied, because the gradient is zero almost everywhere.\medskip
+
+We therefore consider an alternative error function known as the \textit{perceptron criterion}. To derive this, we note that we are seeking a weight vector $\boldsymbol{w}$ such that patterns $\boldsymbol{x}_n$ in class $\mathcal{C}_1$ will have $\boldsymbol{w}^\intercal\boldsymbol{\phi}(\boldsymbol{x}_n) > 0$, whereas patterns $\boldsymbol{x}_n$ in class $\mathcal{C}_2$ have $\boldsymbol{w}^\intercal\boldsymbol{\phi}(\boldsymbol{x}_n) < 0$. Using the $t \in \{-1,+1\}$ target coding scheme it follows that we would like all patterns to satisfy $\boldsymbol{w}^\intercal\boldsymbol{\phi}(\boldsymbol{x}_n)t_n > 0$. The perceptron criterion associates zero error with any pattern that is correctly classified, whereas for a misclassified pattern $\boldsymbol{x}_n$ it tries to minimize the quantity $-\boldsymbol{w}^\intercal\boldsymbol{\phi}(\boldsymbol{x}_n)t_n$. The perceptron criterion is therefore given by
+\begin{equation*}
+    E_P(\boldsymbol{w}) = - \sum\limits_{n \in \mathcal{M}}\boldsymbol{w}^\intercal
+    \boldsymbol{\phi}_nt_n
+\end{equation*}
+where $\mathcal{M}$ denotes the set of all misclassified patterns. The contribution to the error associated with a particular misclassified pattern is a linear function of $\boldsymbol{w}$ in regions of $\boldsymbol{w}$ space where the pattern is misclassified and zero in regions where it is correctly classified. The total error function is therefore piecewise linear.\\
+We now apply the stochastic gradient descent algorithm to this error function. The change in the weight vector $\boldsymbol{w}$ is then given by
+\begin{equation}
+    \boldsymbol{w}^{\tau + 1} = \boldsymbol{w}^\tau - \eta \nabla E_P(\boldsymbol{w}) = \boldsymbol{w}^\tau + \eta\boldsymbol{\phi}_nt_n
+\end{equation}
+where $\eta$ is the learning rate parameter and $\tau$ is an integer that indexes the steps of the algorithm. Because the perceptron function $y(\boldsymbol{x}, \boldsymbol{w})$ is unchanged if we multiply $\boldsymbol{w}$ by a constant, we can set the learning rate $\eta$ equal to 1 without loss of generality. Note that, as the weight vector evolves during training, the set of patterns that are misclassified will change.\medskip
+
+The algorithm consists in cycling through the training patterns, and for each pattern $\boldsymbol{x}_n$, we evaluate the perceptron function 6.8. If the pattern is correctly classified, then the weight vector remains unchanged, whereas if it is incorrectly classified, then for class $\mathcal{C}_1$ we add the vector $\boldsymbol{\phi}(\boldsymbol{x}_n)$ onto the current estimate of the weight vector $\boldsymbol{w}$ while for class $\mathcal{C}_2$ we subtract the vector $\boldsymbol{\phi}(\boldsymbol{x}_n)$ from $\boldsymbol{w}$.\\
+If we consider the effect of a single update in the perceptron learning algorithm, we see that the contribution to the error from a misclassified pattern will be reduced because from 6.9 we have
+\begin{equation*}
+    -\boldsymbol{w}^{(\tau + 1)\intercal}\boldsymbol{\phi}_nt_n = -\boldsymbol{w}^{(\tau)\intercal}\boldsymbol{\phi}_nt_n - (\boldsymbol{\phi}_nt_n)^\intercal\boldsymbol{\phi}_nt_n < -\boldsymbol{w}^{(\tau)\intercal}\boldsymbol{\phi}_nt_n
+\end{equation*}
+where we have set $\eta = 1$ and made us of $\norm{\boldsymbol{\phi}_nt_n}^2 > 0$.\\
+Of course, this does not imply that the contribution to the error function from the other misclassified patterns will have been reduced. Furthermore, the change in weight vector may have caused some previously correctly classified patterns to become misclassified. Thus the perceptron learning rule is not guaranteed to reduce the total error function at each stage.\\
+However, the perceptron convergence theorem states that if there exists an exact solution (in other words, if the training data set is linearly separable), then the perceptron learning algorithm is guaranteed to find an exact solution in a finite number of steps.\\
+Aside from difficulties with the learning algorithm, the perceptron does not provide probabilistic outputs, nor does it generalize readily to $K > 2$ classes. The most important limitation, however, arises from the fact that it is based on linear combinations of fixed basis functions.
+
+\section{Probabilistic Generative Models}
+We turn next to a probabilistic view of classification and show how models with linear decision boundaries arise from simple assumptions about the distribution of the data.\\
+Here we shall adopt a generative approach in which we model the class-conditional densities $p(\boldsymbol{x}|\mathcal{C}_k)$, as well as the class priors $p(\mathcal{C}_k)$, and then use these to compute posterior probabilities $p(\mathcal{C}_k | \boldsymbol{x})$ through Bayes' theorem.\\
+In the case of two classes, the posterior probability for class $\mathcal{C}_1$ can be written as
+\begin{equation}
+\begin{aligned}
+    p(\mathcal{C}_1|\boldsymbol{x}) &= \frac{p(\boldsymbol{x}|\mathcal{C}_1)p(\mathcal{C}_1)}{p(\boldsymbol{x}|\mathcal{C}_1)p(\mathcal{C}_1) + p(\boldsymbol{x}|\mathcal{C}_2)p(\mathcal{C}_2)}\\
+    &= \frac{1}{1 + \exp{(-a)}} = \sigma(a)
+\end{aligned}
+\end{equation}
+where we have defined
+\begin{equation}
+    a = \ln{\frac{p(\boldsymbol{x}|\mathcal{C}_1)p(\mathcal{C}_1)}{p(\boldsymbol{x}|\mathcal{C}_2)p(\mathcal{C}_2)}}
+\end{equation}
+and $\sigma(a)$ is the \textit{logistic sigmoid} function. It satisfies the symmetry property $\sigma(-a) =1 - \sigma(a)$ and its inverse is given by
+\begin{equation*}
+    a = \ln{(\frac{\sigma}{1 - \sigma})}
+\end{equation*}
+and is know as the \textit{logit} function. It represents the log of the ratio of probabilities $\ln{[p(\mathcal{C}_1|\boldsymbol{x})/p(\mathcal{C}_2|\boldsymbol{x})]}$ for the two classes, also know as the \textit{log odds}.\medskip
+
+Let us assume that the class-conditional densities are Gaussian and then explore the resulting form for the posterior probabilities. To start with, we shall assume that all classes share the same covariance matrix. Thus the density for class $\mathcal{C}_k$ is given by
+\begin{equation*}
+    p(\boldsymbol{x}|\mathcal{C}_k) = \frac{1}{(2\pi)^{D/2}}\frac{1}{|\boldsymbol{\Sigma}|^{1/2}}\exp{\{-\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu}_k)^\intercal\boldsymbol{\Sigma}^{-1}(\boldsymbol{x} - \boldsymbol{\mu}_k)\}}
+\end{equation*}
+Consider the case of two classes. From 6.10 and 6.11, we have
+\begin{equation*}
+    p(\mathcal{C}_1|\boldsymbol{x}) = \sigma(\boldsymbol{w ^\intercal x} + w_0)
+\end{equation*}
+where we have defined
+\begin{equation*}
+    \boldsymbol{w} = \boldsymbol{\Sigma}^{-1}(\boldsymbol{\mu}_1 - \boldsymbol{\mu}_2)
+\end{equation*}
+\begin{equation*}
+    w_0 = -\frac{1}{2}\boldsymbol{\mu}_1^\intercal \boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 + \frac{1}{2}\boldsymbol{\mu}_2^\intercal \boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_2 + \ln{\frac{p(\mathcal{C}_1)}{p(\mathcal{C}_2)}}
+\end{equation*}
+We see that the quadratic terms in $\boldsymbol{x}$ from the exponents of the Gaussian densities have cancelled (due to the assumption of common covariance matrices) leading to a linear function of $\boldsymbol{x}$ in the argument of the logistic sigmoid. The resulting decision boundaries correspond to surfaces along which the posterior probabilities $p(\mathcal{C}_k|\boldsymbol{x})$ are constant and so will be given by linear functions of $\boldsymbol{x}$, and therefore the decision boundaries are linear in input space. The prior probabilities $p(\mathcal{C}_k)$ enter only through the bias parameter $w_0$ so that changes in the priors have the effect of making parallel shifts of the decision boundary and more generally of the parallel contours of constant posterior probability.\medskip
+
+If we relax the assumption of a shared covariance matrix and allow each class-conditional density $p(\boldsymbol{x}|\mathcal{C}_k)$ to have its own covariance matrix $\boldsymbol{\Sigma}_k$, then the earlier cancellations will no longer occur, and we will obtain quadratic functions of $\boldsymbol{x}$, giving rise to a \textit{quadratic discriminant}
+\begin{equation*}
+\begin{aligned}
+    \ln{\frac{p(\boldsymbol{x}|\mathcal{C}_1)p(\mathcal{C}_1)}{p(\boldsymbol{x}|\mathcal{C}_2)p(\mathcal{C}_2)}} &= \ln{p(\boldsymbol{x}|\mathcal{C}_1)} - \ln{p(\boldsymbol{x}|\mathcal{C}_2)} + \ln{\frac{p(\mathcal{C}_1)}{p(\mathcal{C}_2)}}\\
+    &= \boldsymbol{x^\intercal W x} + \boldsymbol{w^\intercal x} + w_0
+\end{aligned}
+\end{equation*}
+where the \textit{generalized quadratic discriminant} is $p(\mathcal{C}_k|\boldsymbol{x}) = \sigma(\boldsymbol{x^\intercal W x} + \boldsymbol{w^\intercal x} + w_0)$.
+\subsection{MLE Solution}
+Once we have specified a parametric functional form for the class-conditional densities $p(\boldsymbol{x}|\mathcal{C}_k)$, we can then determine the values of the parameters, together with the prior class probabilities $p(\mathcal{C}_k)$, using maximum likelihood. This requires a data set comprising observations of $\boldsymbol{X}$ along with their corresponding class labels.\\
+In the case of two classes, each having a Gaussian class-conditional density with a shared covariance matrix, and suppose we have a data set $\{\boldsymbol{x}_n, t_n\}$ where $n = 1,..., N$. Here $t_n = 1$ denotes class $\mathcal{C}_1$ and $t_n = 0$ denotes class $\mathcal{C}_2$. We denote the prior class probability $p(\mathcal{C}_1) = \pi$, so that $p(\mathcal{C}_2) = 1 - \pi$. For a data point $\boldsymbol{x}_n$ from class $\mathcal{C}_1$, we have $t_n = 1$ and hence
+\begin{equation*}
+    p(\boldsymbol{x}_n, \mathcal{C}_1) = p(\mathcal{C}_1)p(\boldsymbol{x}_n| \mathcal{C}_1)=\pi\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_1, \boldsymbol{\Sigma})
+\end{equation*}
+Similarly for class $\mathcal{C}_2$, we have $t_n = 0$ and hence
+\begin{equation*}
+     p(\boldsymbol{x}_n, \mathcal{C}_2) = p(\mathcal{C}_2)p(\boldsymbol{x}_n| \mathcal{C}_2)=(1 -\pi)\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_2, \boldsymbol{\Sigma})
+\end{equation*}
+Thus the likelihood function is given by
+\begin{equation*}
+    
+\end{equation*}
 \end{document}
