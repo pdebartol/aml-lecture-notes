@@ -124,7 +124,7 @@ In the previous lecture we have looked at \textit{linear predictors} for real-va
         \item \textbf{Key idea}: There are clever choices of the mapping $\phi(\cdot)$  ensuring that we can efficiently compute $\langle \phi(x_i), \phi(x_j) \rangle$ without ever explicitly mapping to the feature space.
         \item In some cases, the feature space is infinite-dimensional, so we could not explicitly map to it even if we wanted to.
     \end{itemize}
-    \item \textbf{Kernel trick}: The terminology “kernel trick” simply refers to taking any algorithm the depends on the data only through inner products, and replacing each inner product $\langle \boldsymbol{x}, \boldsymbol{x'} \rangle$ by a kernel value $k(\boldsymbol{x}, \boldsymbol{x'})$.
+    \item \textbf{Kernel trick}: The terminology “kernel trick” simply refers to taking any algorithm that depends on the data only through inner products, and replacing each inner product $\langle \boldsymbol{x}, \boldsymbol{x'} \rangle$ by a kernel value $k(\boldsymbol{x}, \boldsymbol{x'})$.
 \end{itemize}\medskip
 
 \begin{definition}
@@ -175,7 +175,7 @@ We can write this as $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \boldsymbol
 Now consider the RBF kernel. In this case, the corresponding feature representation is infinite dimensional. However, by working with kernel functions, we can avoid having to deal with infinite dimensional vectors.
 \newpage
 \subsection{Making new kernels from old}
-Given two valud kernels $\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'})$ and $\mathcal{K}_2(\boldsymbol{x}, \boldsymbol{x'})$, we can create a new kernel using any of the following methods:
+Given two valid kernels $\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'})$ and $\mathcal{K}_2(\boldsymbol{x}, \boldsymbol{x'})$, we can create a new kernel using any of the following methods:
 \begin{itemize}
     \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = c\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'})$, for any constant $c > 0$
     \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = f(\boldsymbol{x})\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'})f(\boldsymbol{x'})$, for any function $f$
@@ -335,9 +335,8 @@ Let us examine the predictive distribution given by equations 5.5 and 5.6. Note 
     \bar{f}(\boldsymbol{x}_*) = \sum\limits_{i = 1}^{n} \alpha_i k(\boldsymbol{x}_i, \boldsymbol{x}_*)
 \end{equation}
 where $\boldsymbol{\alpha} = (K + \sigma^2_n\mathds{1})^{-1}\boldsymbol{y}$.\\
-The fact that the mean prediction for $f(\boldsymbol{x}_*)$ can be written as Eq.5.7 despite the fact that the GP can be represented in terms of a (possible infinite) number of basis functions is one manifestation of the \textit{representer theorem}. We can understand this result intuitively because although the GP defines a joint Gaussian distribution over all of the $y$ variables.\\
-For making predictions at $\boldsymbol{x}_*$ we only care about the $(n + 1)$-dimensional distribution defined by the $n$ training points and the test point. As a Gaussian distribution is marginalized by just taking the relevant block of joint covariance matrix it is clear that conditioning this $(n + 1)$-dimensional distribution on the observations gives us the desired result.\\
-Note also that the variance in Eq.5.4 does not depend on the observed targets, but only on the inputs; this is a property of the Gaussian distribution. The variance is the difference between two terms; the first term $K(X_*, X_*)$ is simpy the prior covariance; from that is subtracted a (positive) term, representing the information the observations give us about the function. We can very simply compute the predictive distribution of test targets $\boldsymbol{y}_*$ by adding $\sigma^2_n\mathds{1}$ to the variance in the expression for cov($\textbf{f}_*$).\medskip
+The fact that the mean prediction for $f(\boldsymbol{x}_*)$ can be written as Eq.5.7 despite the fact that the GP can be represented in terms of a (possible infinite) number of basis functions is one manifestation of the \textit{representer theorem}. We can understand this result intuitively because although the GP defines a joint Gaussian distribution over all of the $y$ variables, for making predictions at $\boldsymbol{x}_*$ we only care about the $(n + 1)$-dimensional distribution defined by the $n$ training points and the test point. As a Gaussian distribution is marginalized by just taking the relevant block of joint covariance matrix it is clear that conditioning this $(n + 1)$-dimensional distribution on the observations gives us the desired result.\\
+Note also that the variance in Eq.5.4 does not depend on the observed targets, but only on the inputs; this is a property of the Gaussian distribution. The variance is the difference between two terms; the first term $K(X_*, X_*)$ is simply the prior covariance; from that is subtracted a (positive) term, representing the information the observations give us about the function. We can very simply compute the predictive distribution of test targets $\boldsymbol{y}_*$ by adding $\sigma^2_n\mathds{1}$ to the variance in the expression for cov($\textbf{f}_*$).\medskip
 
 The predictive distribution for the GP model gives more than just pointwise errorbars of the simplified Eq.5.6. Although not stated explicitly, Eq.5.4 holds unchanged when $X_*$ denotes multiple test inputs; in this case the covariance of the test targets are computed (whose diagonal elements are the pointwise variances). In fact, Eq.5.3 is the mean function and Eq.5.4 the covariance function of the (Gaussian) posterior process.
 \newpage
