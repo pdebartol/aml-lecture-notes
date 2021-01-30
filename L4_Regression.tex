@@ -301,7 +301,7 @@ Writing the RSS in matrix form we obtain
 \end{equation*}
 The ridge regression solutions are easily seen to be
 \begin{equation}
-    \theta^{\text{ridge}} = (\boldsymbol{X^\intercal{X}} + \lambda\mathds{1})\boldsymbol{X}^\intercal\boldsymbol{Y}
+    \theta^{\text{ridge}} = (\boldsymbol{X^\intercal{X}} + \lambda\mathds{1})^{-1}\boldsymbol{X}^\intercal\boldsymbol{Y}
 \end{equation}
 Notice that with the choice of quadratic penalty $\boldsymbol{\theta^\intercal\theta}$, the ridge regression solution is again a linear function of $\boldsymbol{Y}$. The solution adds a positive constant to the diagonal of $\boldsymbol{X^\intercal{X}}$ before inversion. This makes the problem nonsingular, even if $\boldsymbol{X^\intercal{X}}$ is not of full rank.\medskip
 
@@ -371,11 +371,11 @@ Assumption: noise comes from a zero-mean Gaussian distribution with variance $\s
 Adding a constant to a Gaussian just has the effect of shifting its mean, so the resulting conditional
 probability distribution for our generative probabilistic process is:
 \begin{equation*}
-    \mathbb{P}(\boldsymbol{y_i} | \: \boldsymbol{x_i}, \boldsymbol{\theta}, \sigma^2) = \frac{1}{\sigma\sqrt{2\pi}}\exp{\left \{-\frac{1}{2\sigma^2}(\boldsymbol{y_i} - \boldsymbol{x_i}^{\intercal}\boldsymbol{\theta})\right\}}
+    \mathbb{P}(\boldsymbol{y_i} | \: \boldsymbol{x_i}, \boldsymbol{\theta}, \sigma^2) = \frac{1}{\sigma\sqrt{2\pi}}\exp{\left \{-\frac{1}{2\sigma^2}(\boldsymbol{y_i} - \boldsymbol{x_i}^{\intercal}\boldsymbol{\theta})^2\right\}}
 \end{equation*}
 We denote the noise associated with the $i$th observation as $\epsilon_i$ and we will take these to be independent and identically distributed. This allows us to write the overall likelihood function as a product over these N terms:
 \begin{equation*}
-    \mathbb{P}(\{\boldsymbol{y_i}\}_{i = 1}^N | \: \{\boldsymbol{x_i}\}_{i = 1}^N, \boldsymbol{\theta}, \sigma^2) = \prod\limits_{i = 1}^N\frac{1}{\sigma\sqrt{2\pi}}\exp{\left \{-\frac{1}{2\sigma^2}(\boldsymbol{y_i} - \boldsymbol{x_i}^{\intercal}\boldsymbol{\theta})\right\}}
+    \mathbb{P}(\{\boldsymbol{y_i}\}_{i = 1}^N | \: \{\boldsymbol{x_i}\}_{i = 1}^N, \boldsymbol{\theta}, \sigma^2) = \prod\limits_{i = 1}^N\frac{1}{\sigma\sqrt{2\pi}}\exp{\left \{-\frac{1}{2\sigma^2}(\boldsymbol{y_i} - \boldsymbol{x_i}^{\intercal}\boldsymbol{\theta})^2\right\}}
 \end{equation*}
 Now we are going to turn this univariate Gaussian distribution into a multivariate Gaussian distribution with a diagonal covariance matrix:
 \begin{equation*}

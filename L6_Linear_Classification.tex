@@ -135,14 +135,14 @@ A discriminant is a function that takes an input vector $\boldsymbol{x}$ and ass
 \begin{equation*}
     y(\boldsymbol{x}) = \boldsymbol{w^\intercal x} + w_0
 \end{equation*}
-where $\boldsymbol{w}$ is called a \textit{weight} vector, and $w_0$ is a bias (not in the statistical sense). The negative of the bias is sometimes called a \textit{threshold}. An input vector $\boldsymbol{x}$ is assigned to class $\mathcal{C}_1$ if $y(\boldsymbol{x}) \geq 0$ and to class $\mathcal{C}_2$ otherwise. The corresponding decision boundary is defined by the realtion $y(\boldsymbol{x}) = 0$, which corresponds to a $(D - 1)$-dimensional hyperplane within the $D$-dimensional input space. Consider two points $\boldsymbol{x}_A$ and $\boldsymbol{x}_B$ both of which lie on the decision surface.\\
+where $\boldsymbol{w}$ is called a \textit{weight} vector, and $w_0$ is a bias (not in the statistical sense). The negative of the bias is sometimes called a \textit{threshold}. An input vector $\boldsymbol{x}$ is assigned to class $\mathcal{C}_1$ if $y(\boldsymbol{x}) \geq 0$ and to class $\mathcal{C}_2$ otherwise. The corresponding decision boundary is defined by the relation $y(\boldsymbol{x}) = 0$, which corresponds to a $(D - 1)$-dimensional hyperplane within the $D$-dimensional input space. Consider two points $\boldsymbol{x}_A$ and $\boldsymbol{x}_B$ both of which lie on the decision surface.\\
 Because $y(\boldsymbol{x}_A) = y(\boldsymbol{x}_B) = 0$, we have $\boldsymbol{w}^\intercal(\boldsymbol{x}_A- \boldsymbol{x}_B) = 0$ and hence the vector $\boldsymbol{w}$ is orthogonal to every vector lying within the decision surface, and so $\boldsymbol{w}$ determines the orientation of the decision surface. Similarly, if $\boldsymbol{x}$ is a point on the decision surface, then $y(\boldsymbol{x}) = 0$, and so the normal distance from the origin to the decision surface is given by
 \begin{equation*}
-    \frac{\boldsymbol{w^\intercal x}}{\norm{\boldsymbol{w}}} = - \frac{w_o}{\boldsymbol{w}}
+    \frac{\boldsymbol{w^\intercal x}}{\norm{\boldsymbol{w}}} = - \frac{w_o}{\norm{\boldsymbol{w}}}
 \end{equation*}
 We therefore see that the bias parameter $w_0$ determines the location of the decision surface. Furthermore, we note that the value $y(\boldsymbol{x})$ gives a signed measure of the perpendicular distance $r$ of the point $\boldsymbol{x}$ from the decision surface. To see this consider an arbitrary point $\boldsymbol{x}$ and let $\boldsymbol{x}_\perp$ be its orthogonal projection onto the decision surface so that
 \begin{equation*}
-    \boldsymbol{x} = \boldsymbol{x}_\perp + r\frac{\boldsymbol{w^\intercal x}}{\norm{\boldsymbol{w}}}
+    \boldsymbol{x} = \boldsymbol{x}_\perp + r\frac{\boldsymbol{w^\intercal}}{\norm{\boldsymbol{w}}}
 \end{equation*}
 Multiplying both sides of this result by $\boldsymbol{w}^\intercal$ and adding $w_0$, and making use of $y(\boldsymbol{x}) = \boldsymbol{w^\intercal x} + w_0$ and $y(\boldsymbol{x}_\perp) = \boldsymbol{w^\intercal x}_\perp + w_0$, we have
 \begin{equation*}
@@ -241,7 +241,7 @@ From 6.6, we see that $\textbf{S}_\text{B}\boldsymbol{w}$ is always in the direc
     \boldsymbol{w} \propto \textbf{S}_\text{W}^{-1}(\boldsymbol{m}_2 - \boldsymbol{m}_1)
 \end{equation*}
 The projected data can be subsequently used to construct a discriminant, by choosing a threshold $y_0$ so that we classify a new point as belonging to $\mathcal{C}_1$ if $y(\boldsymbol{x}) \geq y_0$ and classify it as belonging to $\mathcal{C}_2$ otherwise.\\
-We can also model the class-conditional densities $p(y|\mathcal{c}_K)$ using Gaussian distributions and then use MLE to find the parameters of the distributions. Some justification for the Gaussian assumption comes from the central limit theorem by noting that $y = \boldsymbol{w^\intercal x}$ is the sum of a set of random variables.
+We can also model the class-conditional densities $p(y|\mathcal{C}_K)$ using Gaussian distributions and then use MLE to find the parameters of the distributions. Some justification for the Gaussian assumption comes from the central limit theorem by noting that $y = \boldsymbol{w^\intercal x}$ is the sum of a set of random variables.
 \newpage
 \subsection{The Perceptron algorithm}
 Another example of a linear discriminant model is the perceptron that corresponds to a two-class model in which the input vector $\boldsymbol{x}$ is first transformed using a fixed nonlinear transformation to give a feature vector $\boldsymbol{\phi}(\boldsymbol{x})$, and this is then used to construct a generalized linear model of the form 
@@ -338,6 +338,48 @@ Similarly for class $\mathcal{C}_2$, we have $t_n = 0$ and hence
 \end{equation*}
 Thus the likelihood function is given by
 \begin{equation*}
-    
+    p(\boldsymbol{t}|\pi, \boldsymbol{\mu}_1, \boldsymbol{\mu}_2, \boldsymbol{\Sigma}) = \prod\limits_{n = 1}^{N} [\pi\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_1, \boldsymbol{\Sigma})]^{t_n}[(1 -\pi)\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_2, \boldsymbol{\Sigma})]^{1 - t_n}
 \end{equation*}
+where $\boldsymbol{t} = (t_1,...,t_N)^\intercal$. As usual, it is convenient to maximize the log of the likelihood function. Consider first the maximization with respect to $\pi$. The terms in the log likelihood function that depend on $\pi$ are
+\begin{equation*}
+    \sum\limits_{n = 1}^{N}\{(t_n\ln{\pi} + (1 - t_n)\ln{(1 - \pi)})\}
+\end{equation*}
+Setting the derivative with respect to $\pi$ equal to zero and rearranging, we obtain
+\begin{equation*}
+    \pi = \frac{1}{N}\sum\limits_{n = 1}^{N}t_n = \frac{N_1}{N}=\frac{N_1}{N_1 + N_2}
+\end{equation*}
+where $N_1$ denotes the total number of data points in class $\mathcal{C}_1$, and $N_2$ denotes the total number of data points in class $\mathcal{C}_2$. Thus the maximum likelihood estimate for $\pi$ is simply the fraction of points in class $\mathcal{C}_1$ as expected. This result is easily generalized to the multiclass case where again the maximum likelihood estimate of the prior probability associated with class $\mathcal{C}_k$ is given by the fraction of the training set points assigned to that class.\\
+Now consider the maximization with respect to $\boldsymbol{\mu}_1$. Again we can pick out of the log likelihood function those terms that depend on $\boldsymbol{\mu}_1$ giving
+\begin{equation*}
+    \sum\limits_{n = 1}^{N}t_n\ln{\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_1, \boldsymbol{\Sigma})} = -\frac{1}{2}\sum\limits_{n = 1}^{N}t_n(\boldsymbol{x}_n - \boldsymbol{\mu}_1)^\intercal\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}_n - \boldsymbol{\mu}_1) + \text{const}
+\end{equation*}
+Setting the derivative with respect to $\boldsymbol{\mu}_1$ to zero and rearranging, we obtain
+\begin{equation*}
+    \boldsymbol{\mu}_1 = \frac{1}{N_1}\sum\limits_{n = 1}^{N}t_n\boldsymbol{x}_n
+\end{equation*}
+which is simply the mean of all the input vectors $\boldsymbol{x}_n$ assigned to class $\mathcal{C}_1$. By a similar argument, the corresponding result for $\boldsymbol{\mu}_2$ is given by
+\begin{equation*}
+    \boldsymbol{\mu}_2 = \frac{1}{N_2}\sum\limits_{n = 1}^{N}(1 - t_n)\boldsymbol{x}_n
+\end{equation*}
+which again is the mean of all the input vectors $\boldsymbol{x}_n$ assigned to class $\mathcal{C}_2$.\\
+Finally, consider the maximum likelihood solution for the shared covariance matrix $\boldsymbol{\Sigma}$. Picking out the terms in the log likelihood function that depend on $\boldsymbol{\Sigma}$, we have
+\begin{equation*}
+    \begin{aligned}
+        &-\frac{1}{2}\sum\limits_{n = 1}^{N}t_n\ln{|\boldsymbol{\Sigma}|} - \frac{1}{2}\sum\limits_{n = 1}^{N}t_n(\boldsymbol{x}_n - \boldsymbol{\mu}_1)^\intercal\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}_n - \boldsymbol{\mu}_1)\\
+        &-\frac{1}{2}\sum\limits_{n = 1}^{N}( 1 - t_n)\ln{|\boldsymbol{\Sigma}|} - \frac{1}{2}\sum\limits_{n = 1}^{N}(1 - t_n)(\boldsymbol{x}_n - \boldsymbol{\mu}_2)^\intercal\boldsymbol{\Sigma}^{-1}(\boldsymbol{x}_n - \boldsymbol{\mu}_2)\\
+        &= -\frac{N}{2}\ln{|\boldsymbol{\Sigma}|} - \frac{N}{2}\text{Tr}\{\boldsymbol{\Sigma}^{-1}\textbf{S}\}
+    \end{aligned}
+\end{equation*}
+where we have defined
+\begin{equation*}
+    \textbf{S} = \frac{N_1}{N}\textbf{S1} + \frac{N_2}{N}\textbf{S2}
+\end{equation*}
+\begin{equation*}
+    \textbf{S}_1 = \frac{1}{N_1}\sum\limits_{n \in \mathcal{C}_1}(\boldsymbol{x}_n - \boldsymbol{\mu}_1)(\boldsymbol{x}_n - \boldsymbol{\mu}_1)^\intercal
+\end{equation*}
+\begin{equation*}
+    \textbf{S}_2 = \frac{1}{N_2}\sum\limits_{n \in \mathcal{C}_2}(\boldsymbol{x}_n - \boldsymbol{\mu}_2)(\boldsymbol{x}_n - \boldsymbol{\mu}_2)^\intercal
+\end{equation*}
+Using the standard result for the maximum likelihood solution for a Gaussian distribution, we see that $\boldsymbol{\Sigma} = \textbf{S}$, which represents a weighted average of the covariance matrices associated with each of the two classes separately.\\
+This result is easily extended to the K class problem to obtain the corresponding maximum likelihood solutions for the parameters in which each class-conditional density is Gaussian with a shared covariance matrix. Note that the approach of fitting Gaussian distributions to the classes is not robust to outliers, because the maximum likelihood estimation of a Gaussian is not robust.
 \end{document}

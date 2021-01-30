@@ -116,7 +116,7 @@ We start our discussion by modeling the posterior distribution:
    & p(\theta | x) = e^{-\beta w(\theta,x)}
    \\
    & w(\theta,x) = R(\theta,x) - F(x)\\
-   & F(x) = - \dfrac{1}{\beta} \log{\int{e^{\beta R(\theta,x)}d\theta}} &&& \text{(Normalization term for $p(\theta|x)$)}
+   & F(x) = - \dfrac{1}{\beta} \log{\int{e^{-\beta R(\theta,x)}d\theta}} &&& \text{(Normalization term for $p(\theta|x)$)}
   \end{aligned}
 \end{equation*}
  
@@ -126,7 +126,7 @@ We start our discussion by modeling the posterior distribution:
 \begin{aligned}
    & \mathbb{E}_{\theta|x'} \Big[ - \log{p(\theta|x'')}\Big]
    \\
-   & = \mathbb{E}_{\theta|x'} \Big[ - \beta w(\theta,x'')\Big]\\
+   & = \mathbb{E}_{\theta|x'} \Big[\beta w(\theta,x'')\Big]\\
    & = \beta \Big( \underbrace{\mathbb{E}_{\theta|x'} \Big[ R(\theta,x'')\Big]}_{Loss} \underbrace{-F(x'')}_\text{Free Energy} \Big ) &&& \text{(Note that $F(x'')$ does not depend on $\theta$ since we integrate it out)}
   \end{aligned}
 \end{equation*}

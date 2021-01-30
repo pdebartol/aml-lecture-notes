@@ -258,17 +258,26 @@ as the predicted output. This will result in the correct prediction $\mathbf{y}$
 have been chosen such that the inequalities $\mathbf{f(x,y_{i}) < f(x, y)}$
 hold for all incorrect outputs $\mathbf{y_{i} \not =  y}$. \\
 
-The first challenge in using (2) for structured outputs is that, while there is generalization across inputs $\mathbf{x}$, there is no generalization across outputs. This is due to having a
+\begin{equation}
+\begin{aligned}
+& \underset{\textbf{w}}{\text{min}}
+& & \dfrac{1}{2} \norm{w}^2  \\
+& \text{subject to}
+& & f(x_{i},y_{i}) - f(x_{i},y) = (w_{y_i} - w_y)\cdot \phi(x_i) \geq 1 , \;\forall i, y \not = y_{i}
+\end{aligned}
+\end{equation}
+
+The first challenge in using (8.8) for structured outputs is that, while there is generalization across inputs $\mathbf{x}$, there is no generalization across outputs. This is due to having a
 separate weight vector $\mathbf{w_y}$ for each class $\mathbf{y}$. Furthermore,
 since the number of possible outputs can become very large (or infinite), naively reducing structured output prediction
 to multi-class classification leads to an undesirable blow-up
 in the overall number of parameters and in the overall number of inequalities, which is $\mathbf{n(k-1)}$. \\
 
 The key idea in overcoming these problems is to extract
-features from input-output pairs using a so-called joint feature map $\mathbf{\Psi(x, y)}$ instead of $\mathbf{\Psi(x)}$. These joint features will allow us to generalize across outputs and to define meaningful scores even
+features from input-output pairs using a so-called joint feature map $\mathbf{\Psi(x, y)}$ instead of $\mathbf{\Phi(x)}$. These joint features will allow us to generalize across outputs and to define meaningful scores even
 for outputs that were never actually observed in the training data. At the same time, since we will define compatibility
 functions via $\mathbf{f(x, y) = w\cdot \Psi(x, y)}$, the number of parameters will simply equal the number of features extracted via
-$\mathbf{\Psi}$, which may not depend on $\mathbf{|Y|}$. One can then use the formulation in (2) with the more flexible definition of $\mathbf{f}$ via $\mathbf{\Psi}$ to
+$\mathbf{\Psi}$, which may not depend on $\mathbf{|Y|}$. One can then use the formulation in (8.8) with the more flexible definition of $\mathbf{f}$ via $\mathbf{\Psi}$ to
 arrive at the following (hard-margin) optimization problem:
 
 \begin{equation*}
