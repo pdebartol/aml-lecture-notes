@@ -1,6 +1,7 @@
 # Advanced Machine Learning Lecture Notes Fall 2020
 
 [@pierobartolo](https://github.com/pierobartolo) and [@MirkoDeVita98](https://github.com/MirkoDeVita98) co-authored these lectures notes for the Advanced Machine Learning course at ETH Zürich.
+**You have all the rights to fork this repository and build upon it as long as you give credits to the authors.**
 
 ## Access
 To pull the notes to your local computer you must first `clone` the repository.
