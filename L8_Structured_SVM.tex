@@ -16,6 +16,7 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{amsmath,amsfonts,graphicx}
+\usepackage{amssymb}
 
 %
 % The following commands set up the lecnum (lecture number)
@@ -43,7 +44,7 @@
    \framebox{
       \vbox{\vspace{2mm}
     \hbox to 6.28in { {\bf Advanced Machine Learning
-	\hfill Fall 2020} }
+	\hfill Fall 2021} }
        \vspace{4mm}
        \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
        \vspace{2mm}
@@ -96,7 +97,7 @@
 \begin{document}
 %FILL IN THE RIGHT INFO.
 %\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
-\lecture{8}{Soft Margin and Structured SVMs }{}{}
+\lecture{8}{Structured SVMs }{}{}
 %\footnotetext{These notes are partially based on those of Nigel Mansell.}
 
 % **** YOUR NOTES GO HERE:
@@ -107,80 +108,8 @@
 %**** ARE NEVER READ BY ANYBODY.
 
 
-\section{Soft Margin SVM} 
-So far, we have assumed that the training data points are linearly separable in the feature space. In practice, however, the class conditional distributions may overlap, in which case exact separation of the training data can lead to poor generalization. We therefore need a way to modify support vector machines so as to allow some of the training points to be misclassified. \\
-
-To do this, we introduce slack variables $\xi_{i} \geq 0$ where $i=1,\ldots,N$. These are defined by $\xi_{i} = 0$ for data points that are on or inside the correct margin boundary and $\xi_{i}= \lvert t_{i} - y(x_{i}) \rvert$ for other points. Thus a data point $x_{i}$ that is on the decision boundary $y(x_{i})=0$ will have $\xi_{i} = 1$, and points with $\xi_{i} > 1$ will be misclassified. \\
-
-\begin{figure}[h]
-\caption{Illustration of the slack variables.}
-\centering
-\includegraphics[width=0.39\textwidth]{img/slack.png}
-\end{figure}
-
-The exact classification constraints are then replaced with:
-
-\begin{align*}
-       t_{i} y(x_{i}) \geq 1 - \xi_{i} \ \ i=1,\ldots,N \\        
-        \xi_{i} \geq 0 \ \ i=1,\ldots,N\\ 
-\end{align*}
-
-Our goal is now to maximize the margin while softly penalizing points that lie on the wrong side of the margin boundary. We therefore minimize:
-
-\begin{equation*}
-\begin{aligned}
-& \underset{w,b,\xi}{\text{min}}
-& & \dfrac{1}{2} \norm{w}^2 + C \sum_{i=1}^{N} \xi_{i}\\
-& \text{subject to}
-& & 1 - \xi_{i} - t_{i} (w^T \phi(x_{i}) +b)  \leq 0, \; i = 1, \ldots, N \\
-&&& - \xi_{i} \leq 0, \; i = 1, \ldots, N
-\end{aligned}
-\end{equation*}
-
-The parameter $C > 0$ controls the trade-off between the slack variable penalty and the margin (training error vs model complexity). In the limit $C \xrightarrow{} \infty $ we will recover the "hard" margin SVM. 
-
-\subsection{Dual Problem}
-It is trivial to show that Slater's condition holds since the constraints are affine functions. Therefore, strong duality holds and we can move to the Lagrangian:
-
-\begin{equation*}
-    \mathcal{L}(w,b,\xi,a,u) = 
-    \dfrac{1}{2} \norm{w}^2 + C \sum_{i=1}^{N} \xi_{i} + \sum_{i=1}^{N} a_{i} \{ 1 - \xi_{i} - t_{i} (w^T \phi(x_{i}) +b) \}
-    - \sum_{i=1}^{N} u_{i}\xi_{i}
-    \end{equation*}
-
-Furthermore, the corresponding KKT conditions are:
-\begin{align}
-        a_{n} \geq 0 \\       
-        t_{n}y(x_{n}) -1 +\xi_{n} \geq 0 \\
-        a_{n}(t_{n}y(x_{n}) -1 +\xi_{n} ) = 0
-        \\
-        u_{n} \geq 0 \\
-        \xi_{n} \geq 0 \\
-        u_{n}\xi_{n} = 0
-\end{align}
-
-
-We now optimize out $w,b,\xi_{i}$:
-
-\begin{align*}
-        \frac{\partial{\mathcal{L}}}{\partial{w}} = 0 \implies w = \sum_{i=1}^{N} a_{i}t_{i}\phi(x_{i}) \\       \frac{\partial{\mathcal{L}}}{\partial{b}} = 0 \implies \sum_{i=1}^{N} a_{i}t_{i} = 0 \\
-        \frac{\partial{\mathcal{L}}}{\partial{\xi_{i}}} = 0 \implies 
-        a_{i} = C - u_{i}
-\end{align*}
-
-Using the previous results from "hard" margin SVM together with the above  results, we can  eliminate $w,b,\xi_{i}$ from the Lagrangian. We obtain the dual Lagrangian function which is identical to the "hard" margin one, except that the constraints are somewhat different:
-
-
-\begin{align*}
-         \mathcal{L}(\xi,a,u) = \sum_{i=1}^{N} a_{i}  - \dfrac{1}{2}
-    \sum_{i=1}^{N} { \sum_{j=1}^{N} a_{i} a_{j} t_{i} t_{j} \phi(x_{i})^T \phi(x_{j})} + C \sum_{i=1}^{N} \xi_{i} - \sum_{i=1}^{N} a_{i} \xi_{i} -
-         \sum_{i=1}^{N} u_{i} \xi_{i} \\       
-          \mathcal{L}(\xi,a,u) = \sum_{i=1}^{N} a_{i}  - \dfrac{1}{2}
-    \sum_{i=1}^{N} { \sum_{j=1}^{N} a_{i} a_{j} t_{i} t_{j} \phi(x_{i})^T \phi(x_{j})} +  \overbrace{\sum_{i=1}^{N} \xi_{i} (a_{i} + u_{i}) - \sum_{i=1}^{N} a_{i} \xi_{i} -
-         \sum_{i=1}^{N} u_{i} \xi_{i}}^\text{=0} 
-        \end{align*}
-
-This gives the dual representation of the soft margin SVM problem:
+\section{Non-Linear SVMs}
+The SVM soft-margin dual formulation is the following:
 \begin{equation*}
 \begin{aligned}
 & \underset{a}{\text{max}}
@@ -191,17 +120,88 @@ This gives the dual representation of the soft margin SVM problem:
 &&& \sum_{i=1}^{N} a_{i}t_{i} = 0
 \end{aligned}
 \end{equation*}
+For very high dimensional space, the nonlinear transformation $\phi(x)$ might be
+computationally too difficult to compute, when we only require the inner product $\langle \phi(x_{i}),\, \phi(x_{j}) \rangle$. A way to overcome this problem is making use of \textbf{Kernel} functions.
 
-Where the first constraint comes from the fact that $a_{i} = C - u_{i}$ and $a_{i} \geq 0, u_{i} \geq 0$ must be satisfied (KKT).
-\\
 
-We can now interpret the resulting solution:
-\begin{itemize}
-    \item data points for which $a_{i} = 0$: they do not contribute to the predictive model.
-    \item data points for which $0 < a_{i} < C$: lie on the margin since $a_{i} < C \implies u_{i} > 0 \implies \xi_{i} = 0$  \\ where the last implication comes from complementary slackness (8.6)
-    \item data points for which $a_{i} = C$: lie inside the margin and can either be correctly classified if $\xi_{i} \leq 1$ or misclassifed if $\xi_{i} > 1$
-\end{itemize}
+\begin{definition}
+A function $k : \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R}$ is said to be a kernel function if and only if it is an inner product $\langle \boldsymbol{\phi(x)}, \boldsymbol{\phi(x')} \rangle$  for some (possibly infinite dimensional) mapping $\boldsymbol{\phi(x)}$.
+\end{definition}
 \newpage
+\begin{definition}
+A function $k : \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R}$ is said to be symmetric positive semidefinite (PSD) if it is symmetric, i.e \: $k(\boldsymbol{x}, \boldsymbol{x'}) = k(\boldsymbol{x'}, \boldsymbol{x})$; For any integer $m > 0$ and any set of inputs $\boldsymbol{x_1,...,x_m }\in \mathbb{R}^d$, the following matrix is positive semi-definite:
+\begin{center}
+    $\boldsymbol{K} =
+    \begin{bmatrix}
+    k(\boldsymbol{x_1}, \boldsymbol{x_1}) & \hdots & k(\boldsymbol{x_1}, \boldsymbol{x_m})\\
+    \vdots & \ddots & \vdots\\
+    k(\boldsymbol{x_m}, \boldsymbol{x_1}) & \hdots & k(\boldsymbol{x_m}, \boldsymbol{x_m})
+    \end{bmatrix}
+    \succeq \boldsymbol{0}
+$
+\end{center}
+This matrix, with $(i, j)$-th entry equal to $k(\boldsymbol{x_i}, \boldsymbol{x_j})$, is called the \textbf{Gram matrix}.
+\end{definition}
+
+\begin{theorem}
+The above two definitions are equivalent. That is, $k$ is a kernel function if and only if it is symmetric PSD.
+\end{theorem}
+\begin{proof}
+The “only if” part is easy to show (at least when $\phi$ is finite-dimensional): The inner product is certainly symmetric, and the Gram matrix can be written as $\boldsymbol{K = \Phi^\intercal\Phi}$, where $\boldsymbol{\Phi} \in \mathbb{R}^{\text{dim}(\boldsymbol{\Phi}) \times m}$ contains the $m$ feature vectors $\{\boldsymbol{\phi(x_t)}\}_{t = 1}^{m}$ as columns. The matrix $\boldsymbol{K = \Phi^\intercal\Phi}$  is trivially positive semidefinite, since for any $\boldsymbol{z}$ we have $\boldsymbol{z^\intercal\Phi^\intercal\Phi z} = \boldsymbol{\norm{\Phi z}^2} \geq 0$.\medskip
+
+The “if” part is more challenging and comes from \textit{Mercer's Theorem}.
+\end{proof}\medskip
+
+\begin{theorem}{\textbf{Mercer's  Theorem}\\}
+Recall: any positive definite matrix $\boldsymbol{K}$ can be represented using an eigendecomposition of the form $\boldsymbol{K = U^\intercal\Lambda U}$, where $\boldsymbol{\Lambda}$ is a diagonal matrix of eigenvalues $\lambda_i > 0$, and $\boldsymbol{U}$ is a matrix containing the eigenvectors.\\
+Now consider element $(i, j)$ of $\boldsymbol{K}$:
+\begin{equation*}
+    k_{ij} = (\boldsymbol{\Lambda}^\frac{1}{2}\boldsymbol{U}_{:i})^\intercal(\boldsymbol{\Lambda}^\frac{1}{2}\boldsymbol{U}_{:j})
+\end{equation*}
+where $\boldsymbol{U}_{:i}$ is the \textit{i}'th column of $\boldsymbol{U}$. If we define $\boldsymbol{\phi(x_i)} = \boldsymbol{\Lambda}^\frac{1}{2}\boldsymbol{U}_{:i}$, then we can write:
+\begin{equation*}
+    k_{ij} = \boldsymbol{\phi(x_i)}^\intercal \boldsymbol{\phi(x_j)} = \sum\limits_m \phi_m (\boldsymbol{x_i})\phi_m(\boldsymbol{x_j})
+\end{equation*}
+\end{theorem}
+Thus we see that the entries in the kernel matrix can be computed by performing an inner product of some feature vectors that are implicitly defined by the eigenvectors of the kernel matrix. This idea can be generalized to apply to kernel functions, not just kernel matrices.\\
+For example consider the \textbf{quadratic kernel} $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \langle\boldsymbol{x}, \boldsymbol{x'}\rangle^2$. In 2d, we have:
+\begin{equation*}
+    \mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = (x_1x_1' + x_2x_2')^2 = x_1^2(x_1')^2 + 2x_1x_2x_1'x_2' + x_2^2(x_2')^2
+\end{equation*}
+We can write this as $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \boldsymbol{\phi(x)}^\intercal\boldsymbol{\phi(x)}$ if we define $\boldsymbol{\phi(x_1, x_2)} = [x_1^2, \sqrt{2}x_1x_2, x_2^2] \in \mathbb{R}^3$. So we embed the 2d inputs $\boldsymbol{x}$ into a 3d feature space $\boldsymbol{\phi(x)}$.\\
+Now consider the RBF kernel. In this case, the corresponding feature representation is infinite dimensional. However, by working with kernel functions, we can avoid having to deal with infinite dimensional vectors.
+\newpage
+\subsection{Kernel Engineering}
+Given two valud kernels $\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'})$ and $\mathcal{K}_2(\boldsymbol{x}, \boldsymbol{x'})$, we can create a new kernel using any of the following methods:
+\begin{itemize}
+    \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = c\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'})$, for any constant $c > 0$
+    \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = f(\boldsymbol{x})\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'})f(\boldsymbol{x'})$, for any function $f$
+    \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = q(\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'}))$, for any function polynomial $q$ with non-negative coefficients
+    \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \exp{(\mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'}))}$
+    \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \boldsymbol{x}^\intercal\boldsymbol{Ax'}$, for any PSD matrix $\boldsymbol{A}$
+\end{itemize}
+For example, suppose we start with the linear kernel $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \boldsymbol{x^\intercal x'}$. We know this is a valid Mercer kernel, since the corresponding Gram matrix is just the (scaled) covariance matrix of the data. From the above rules, we can see that the polynomial kernel $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = (\boldsymbol{x^\intercal x'})^M$is a valid Mercer kernel. This contains all monomials of order M. For example, if M = 2 and the inputs are 2d, we have:
+$$(\boldsymbol{x^\intercal x'})^2 = (x_1x_1' + x_2x_2')^2 = (x_1x_1')^2 + (x_2x_2)^2 + (x_1x_1')(x_2x_2')$$
+We can generalize this to contain all terms up to degree M by using the kernel $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = (\boldsymbol{x^\intercal x'} + c)^M$ . For example, if M = 2 and the inputs are 2d, we have:
+$$(\boldsymbol{x^\intercal x'} + 1)^2 = (x_1x_1')^2 + (x_1x_1')(x_2x_2') + (x_1x_1') + (x_2x_2)(x_1x_1') + (x_2x_2')^2 + (x_2x_2') + (x_1x_1') + (x_2x_2') + 1$$
+We can also use the above rules to establish that the Gaussian kernel is a valid kernel. To see this,
+note that:
+$$\norm{\boldsymbol{x} - \boldsymbol{x'}}^2 = \boldsymbol{x}^\intercal\boldsymbol{x} + (\boldsymbol{x'})^\intercal\boldsymbol{x'} - 2\boldsymbol{x}^\intercal\boldsymbol{x'}$$
+and hence
+$$\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \exp{(-\norm{\boldsymbol{x} - \boldsymbol{x'}}^2/2\sigma^2)} = \exp{(-\boldsymbol{x}^\intercal\boldsymbol{x}/2\sigma^2)}\exp{(\boldsymbol{x}^\intercal\boldsymbol{x'}/\sigma^2)}\exp{(-(\boldsymbol{x'})^\intercal\boldsymbol{x'}/2\sigma^2)}$$
+is a valid kernel.
+\subsection{Combining kernels by addition and multiplication}
+We can also combine kernels using addition or multiplication:
+\begin{itemize}
+    \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'}) + \mathcal{K}_2(\boldsymbol{x}, \boldsymbol{x'})$
+    \item $\mathcal{K}(\boldsymbol{x}, \boldsymbol{x'}) = \mathcal{K}_1(\boldsymbol{x}, \boldsymbol{x'}) \times \mathcal{K}_2(\boldsymbol{x}, \boldsymbol{x'})$
+\end{itemize}
+Multiplying two positive-definite kernels together always results in another positive definite kernel. This is a way to get a conjunction of the individual properties of each kernel. In addition, adding two positive-definite kernels together always results in another positive definite
+kernel. This is a way to get a disjunction of the individual properties of each kernel.
+\subsection{Kernels for structured inputs}
+Kernels are particularly useful when the inputs are structured objects, such as strings and graphs, since it is often hard to “featurize” variable-sized inputs. For example, we can define a string kernel which compares strings in terms of the number of n-grams they have in common.
+We can also define kernels on graphs . For example, the random walk kernel conceptually performs random walks on two graphs simultaneously, and then counts the number of paths that were produced by both walks.
+
 
 
 \section{Structured SVMs}
@@ -365,6 +365,3 @@ prediction algorithm can be adapted to efficiently solve the
 loss-augmented inference problem as well.
 
 \end{document}
-
-
-
