@@ -19,3 +19,10 @@ compile them with the following command:
     pdflatex lecture_x
 
 Once compiled, you should see `lecture_x.pdf`.
+
+To build all the files at once, you can do (Windows Cygwin. I assume you'd know how to do this if you are on linux):
+
+```
+for i in *.tex; do /cygdrive/f/Programme/MiKTeX_20.11/miktex/bin/x64/pdflatex -halt-on-error -output-directory pdf "$i" ; done
+```
+
