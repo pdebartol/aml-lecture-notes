@@ -42,7 +42,7 @@
    \framebox{
       \vbox{\vspace{2mm}
     \hbox to 6.28in { {\bf Advanced Machine Learning
-	\hfill Fall 2020} }
+	\hfill Fall 2021} }
        \vspace{4mm}
        \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
        \vspace{2mm}
@@ -54,7 +54,7 @@
 
    {\bf Note}: {\it LaTeX template courtesy of UC Berkeley EECS dept.}
 
-   {\bf Disclaimer}: {\it These notes are adapted from ETH's Advanced Machine Learning Course, Cornell's CS4780 Course, "The Element of Statistical Learning" and "Boosting: Foundations and Algorithms" books.}
+   {\bf Disclaimer}: {\it These notes are adapted from ETH's Advanced Machine Learning Course, Cornell's CS4780 Course, "The Element of Statistical Learning", "Boosting: Foundations and Algorithms" books and the Wikipedia page on the bias-variance tradeoff.}
    \vspace*{4mm}
 }
 %
@@ -104,6 +104,64 @@
 % macros follow.  
 %**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
 %**** ARE NEVER READ BY ANYBODY.
+
+
+\section{Bias-Variance Tradeoff}
+The bias–variance tradeoff is the property of a model that the variance of the parameter estimated across samples can be reduced by increasing the bias in the estimated parameters.\\ The bias–variance dilemma or bias–variance problem is the conflict in trying to simultaneously minimize these two sources of error that prevent supervised learning algorithms from generalizing beyond their training set:
+\begin{itemize}
+    \item The \textit{bias} error is an error from erroneous assumptions in the learning algorithm. High bias can cause an algorithm to miss the relevant relations between features and target outputs (underfitting).
+    \item The \textit{variance} is an error from sensitivity to small fluctuations in the training set. High variance may result from an algorithm modeling the random noise in the training data (overfitting).
+\end{itemize}
+The bias–variance decomposition is a way of analyzing a learning algorithm's expected generalization error with respect to a particular problem as a sum of three terms, the bias, variance, and a quantity called the irreducible error, resulting from noise in the problem itself.\\
+Below you can find a derivation of the bias-variance decomposition.
+\subsection{Derivation}
+
+
+\begin{align*}
+    \operatorname{Var}[X] = \operatorname{E}[X^2] - \operatorname{E}[X]^2.
+\end{align*}
+
+Rearranging, we get:
+
+\begin{align*}
+    \operatorname{E}[X^2] = \operatorname{Var}[X] + \operatorname{E}[X]^2
+\end{align*}
+
+Since $f$ is Deterministic, i.e. independent of $D$, $\operatorname{E}[f] = f$.
+
+Thus, given $y = f + \varepsilon$ and $\operatorname{E}[\varepsilon] = 0$ (because $\varepsilon$ is noise), implies $\operatorname{E}[y] = \operatorname{E}[f + \varepsilon] = \operatorname{E}[f] = f$.
+
+Also, since $\operatorname{Var}[\varepsilon] = \sigma^2$,
+
+\begin{align*}
+    \operatorname{Var}[y] = \operatorname{E}[(y - \operatorname{E}[y])^2] = \operatorname{E}[(y - f)^2] = \operatorname{E}[(f + \varepsilon - f)^2] = \operatorname{E}[\varepsilon^2] = \operatorname{Var}[\varepsilon] + \operatorname{E}[\varepsilon]^2  = \sigma^2 + 0^2 = \sigma^2.
+\end{align*}
+
+
+Thus, since $\varepsilon$ and $\hat{f}$ are independent, we can write
+
+
+\begin{align*}
+\operatorname{E}\big[(y - \hat{f})^2\big]
+ & = \operatorname{E}\big[(f+\varepsilon  - \hat{f} )^2\big] \\[5pt]
+ & = \operatorname{E}\big[(f+\varepsilon  - \hat{f} +\operatorname{E}[\hat{f}]-\operatorname{E}[\hat{f}])^2\big] \\[5pt]
+ & = \operatorname{E}\big[(f-\operatorname{E}[\hat{f}])^2\big]+\operatorname{E}[\varepsilon^2]+\operatorname{E}\big[(\operatorname{E}[\hat{f}]- \hat{f})^2\big] 
++2\operatorname{E}\big[(f-\operatorname{E}[\hat{f}])\varepsilon\big]
++2\operatorname{E}\big[\varepsilon(\operatorname{E}[\hat{f}]- \hat{f})\big]
++2\operatorname{E}\big[(\operatorname{E}[\hat{f}]- \hat{f})(f-\operatorname{E}[\hat{f}])\big] \\[5pt]
+ & = (f-\operatorname{E}[\hat{f}])^2+\operatorname{E}[\varepsilon^2]+\operatorname{E}\big[(\operatorname{E}[\hat{f}]- \hat{f})^2\big] 
++2(f-\operatorname{E}[\hat{f}])\operatorname{E}[\varepsilon]
++2\operatorname{E}[\varepsilon]\operatorname{E}\big[\operatorname{E}[\hat{f}]- \hat{f}\big]
++2\operatorname{E}\big[\operatorname{E}[\hat{f}]- \hat{f}\big](f-\operatorname{E}[\hat{f}]) \\[5pt]
+ & = (f-\operatorname{E}[\hat{f}])^2+\operatorname{E}[\varepsilon^2]+\operatorname{E}\big[(\operatorname{E}[\hat{f}]- \hat{f})^2\big]\\[5pt]
+ & = (f-\operatorname{E}[\hat{f}])^2+\operatorname{Var}[\varepsilon]+\operatorname{Var}\big[\hat{f}\big]\\[5pt]
+ & = \operatorname{Bias}[\hat{f}]^2+\operatorname{Var}[\varepsilon]+\operatorname{Var}\big[\hat{f}\big]\\[5pt]
+ & = \operatorname{Bias}[\hat{f}]^2+\sigma^2+\operatorname{Var}\big[\hat{f}\big].
+\end{align*}
+
+
+Finally, MSE loss function (or negative log-likelihood) is obtained by taking the expectation value over $x\sim
+\text{MSE} = \operatorname{E}_x\bigg\{\operatorname{Bias}_D[\hat{f}(x;D)]^2+\operatorname{Var}_D\big[\hat{f}(x;D)\big]\bigg\} + \sigma^2.$
 
 
 \section{Bagging} % Don't be this informal in your notes!

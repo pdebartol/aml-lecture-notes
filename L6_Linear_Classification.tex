@@ -42,7 +42,7 @@
    \framebox{
       \vbox{\vspace{2mm}
     \hbox to 6.28in { {\bf Advanced Machine Learning
-	\hfill Fall 2020} }
+	\hfill Fall 2021} }
        \vspace{4mm}
        \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
        \vspace{2mm}
@@ -105,6 +105,8 @@
 % macros follow.  
 %**** IN GENERAL, BE BRIEF. LONG SCRIBE NOTES, NO MATTER HOW WELL WRITTEN,
 %**** ARE NEVER READ BY ANYBODY.
+
+\section{Classification}
 The goal in classification is to take an input vector $\boldsymbol{x}$ and to assign it to one of $K$ discrete classes $\mathcal{C}_k$ where $k = 1,...,K$.\\
 In the most common scenario, the classes are taken to be disjoint, so that each input is assigned to one and only one class. The input space is thereby divided into \textit{decision regions} whose boundaries are called \textit{decision boundaries} or \textit{decision surfaces}.\\
 In this lecture we consider linear models for classification, by which we mean that the decision surfaces are linear functions of the input vector $\boldsymbol{x}$ and hence are defined by $(D - 1)$-dimensional hyperplanes within the $D$-dimensional input space. Data sets whose classes can be separated exactly by linear decision surfaces are said to be \textit{linearly separable}.\medskip
@@ -338,7 +340,11 @@ Similarly for class $\mathcal{C}_2$, we have $t_n = 0$ and hence
 \end{equation*}
 Thus the likelihood function is given by
 \begin{equation*}
-    p(\boldsymbol{t}|\pi, \boldsymbol{\mu}_1, \boldsymbol{\mu}_2, \boldsymbol{\Sigma}) = \prod\limits_{n = 1}^{N} [\pi\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_1, \boldsymbol{\Sigma})]^{t_n}[(1 -\pi)\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_2, \boldsymbol{\Sigma})]^{1 - t_n}
+% commented out after merging advilema to pierobartolo and getting a conflict. 
+% this is the old version.
+%    p(\boldsymbol{t}|\pi, \boldsymbol{\mu}_1, \boldsymbol{\mu}_2, \boldsymbol{\Sigma}) = \prod\limits_{n = 1}^{N} [\pi\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_1, \boldsymbol{\Sigma})]^{t_n}[(1 -\pi)\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_2, \boldsymbol{\Sigma})]^{1 - t_n}
+    p(\boldsymbol{X}, \boldsymbol{\mathcal{C}}) = \prod_1^N
+    [\pi\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_1, \boldsymbol{\Sigma})]^{t_n} [(1 -\pi)\mathcal{N}(\boldsymbol{x}_n|\boldsymbol{\mu}_2, \boldsymbol{\Sigma})]^{1-t_n}
 \end{equation*}
 where $\boldsymbol{t} = (t_1,...,t_N)^\intercal$. As usual, it is convenient to maximize the log of the likelihood function. Consider first the maximization with respect to $\pi$. The terms in the log likelihood function that depend on $\pi$ are
 \begin{equation*}

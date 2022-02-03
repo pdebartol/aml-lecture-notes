@@ -42,7 +42,7 @@
    \framebox{
       \vbox{\vspace{2mm}
     \hbox to 6.28in { {\bf Advanced Machine Learning
-	\hfill Fall 2020} }
+	\hfill Fall 2021} }
        \vspace{4mm}
        \hbox to 6.28in { {\Large \hfill Lecture #1: #2  \hfill} }
        \vspace{2mm}
@@ -461,8 +461,100 @@ Some important observations:
 \end{itemize}
 
 
+\section{Soft Margin SVM} 
+So far, we have assumed that the training data points are linearly separable in the feature space. In practice, however, the class conditional distributions may overlap, in which case exact separation of the training data can lead to poor generalization. We therefore need a way to modify support vector machines so as to allow some of the training points to be misclassified. \\
+
+To do this, we introduce slack variables $\xi_{i} \geq 0$ where $i=1,\ldots,N$. These are defined by $\xi_{i} = 0$ for data points that are on or inside the correct margin boundary and $\xi_{i}= \lvert t_{i} - y(x_{i}) \rvert$ for other points. Thus a data point $x_{i}$ that is on the decision boundary $y(x_{i})=0$ will have $\xi_{i} = 1$, and points with $\xi_{i} > 1$ will be misclassified. \\
+
+\begin{figure}[h]
+\caption{Illustration of the slack variables.}
+\centering
+\includegraphics[width=0.39\textwidth]{img/slack.png}
+\end{figure}
+
+The exact classification constraints are then replaced with:
+
+\begin{align*}
+       t_{i} y(x_{i}) \geq 1 - \xi_{i} \ \ i=1,\ldots,N \\        
+        \xi_{i} \geq 0 \ \ i=1,\ldots,N\\ 
+\end{align*}
+
+Our goal is now to maximize the margin while softly penalizing points that lie on the wrong side of the margin boundary. We therefore minimize:
+
+\begin{equation*}
+\begin{aligned}
+& \underset{w,b,\xi}{\text{min}}
+& & \dfrac{1}{2} \norm{w}^2 + C \sum_{i=1}^{N} \xi_{i}\\
+& \text{subject to}
+& & 1 - \xi_{i} - t_{i} (w^T \phi(x_{i}) +b)  \leq 0, \; i = 1, \ldots, N \\
+&&& - \xi_{i} \leq 0, \; i = 1, \ldots, N
+\end{aligned}
+\end{equation*}
+
+The parameter $C > 0$ controls the trade-off between the slack variable penalty and the margin (training error vs model complexity). In the limit $C \xrightarrow{} \infty $ we will recover the "hard" margin SVM. 
+
+\subsection{Dual Problem}
+It is trivial to show that Slater's condition holds since the constraints are affine functions. Therefore, strong duality holds and we can move to the Lagrangian:
+
+\begin{equation*}
+    \mathcal{L}(w,b,\xi,a,u) = 
+    \dfrac{1}{2} \norm{w}^2 + C \sum_{i=1}^{N} \xi_{i} + \sum_{i=1}^{N} a_{i} \{ 1 - \xi_{i} - t_{i} (w^T \phi(x_{i}) +b) \}
+    - \sum_{i=1}^{N} u_{i}\xi_{i}
+    \end{equation*}
+
+Furthermore, the corresponding KKT conditions are:
+\begin{align}
+        a_{n} \geq 0 \\       
+        t_{n}y(x_{n}) -1 +\xi_{n} \geq 0 \\
+        a_{n}(t_{n}y(x_{n}) -1 +\xi_{n} ) = 0
+        \\
+        u_{n} \geq 0 \\
+        \xi_{n} \geq 0 \\
+        u_{n}\xi_{n} = 0
+\end{align}
 
 
+We now optimize out $w,b,\xi_{i}$:
 
+\begin{align*}
+        \frac{\partial{\mathcal{L}}}{\partial{w}} = 0 \implies w = \sum_{i=1}^{N} a_{i}t_{i}\phi(x_{i}) \\       \frac{\partial{\mathcal{L}}}{\partial{b}} = 0 \implies \sum_{i=1}^{N} a_{i}t_{i} = 0 \\
+        \frac{\partial{\mathcal{L}}}{\partial{\xi_{i}}} = 0 \implies 
+        a_{i} = C - u_{i}
+\end{align*}
+
+Using the previous results from "hard" margin SVM together with the above  results, we can  eliminate $w,b,\xi_{i}$ from the Lagrangian. We obtain the dual Lagrangian function which is identical to the "hard" margin one, except that the constraints are somewhat different:
+
+
+\begin{align*}
+         \mathcal{L}(\xi,a,u) = \sum_{i=1}^{N} a_{i}  - \dfrac{1}{2}
+    \sum_{i=1}^{N} { \sum_{j=1}^{N} a_{i} a_{j} t_{i} t_{j} \phi(x_{i})^T \phi(x_{j})} + C \sum_{i=1}^{N} \xi_{i} - \sum_{i=1}^{N} a_{i} \xi_{i} -
+         \sum_{i=1}^{N} u_{i} \xi_{i} \\       
+          \mathcal{L}(\xi,a,u) = \sum_{i=1}^{N} a_{i}  - \dfrac{1}{2}
+    \sum_{i=1}^{N} { \sum_{j=1}^{N} a_{i} a_{j} t_{i} t_{j} \phi(x_{i})^T \phi(x_{j})} +  \overbrace{\sum_{i=1}^{N} \xi_{i} (a_{i} + u_{i}) - \sum_{i=1}^{N} a_{i} \xi_{i} -
+         \sum_{i=1}^{N} u_{i} \xi_{i}}^\text{=0} 
+        \end{align*}
+
+This gives the dual representation of the soft margin SVM problem:
+\begin{equation*}
+\begin{aligned}
+& \underset{a}{\text{max}}
+& & \sum_{i=1}^{N} a_{i}  - \dfrac{1}{2}
+    \sum_{i=1}^{N} { \sum_{j=1}^{N} a_{i} a_{j} t_{i} t_{j} \phi(x_{i})^T \phi(x_{j})}\\
+& \text{subject to}
+& & 0 \leq a_{i} \leq C  , \; i = 1, \ldots, N \\
+&&& \sum_{i=1}^{N} a_{i}t_{i} = 0
+\end{aligned}
+\end{equation*}
+
+Where the first constraint comes from the fact that $a_{i} = C - u_{i}$ and $a_{i} \geq 0, u_{i} \geq 0$ must be satisfied (KKT).
+\\
+
+We can now interpret the resulting solution:
+\begin{itemize}
+    \item data points for which $a_{i} = 0$: they do not contribute to the predictive model.
+    \item data points for which $0 < a_{i} < C$: lie on the margin since $a_{i} < C \implies u_{i} > 0 \implies \xi_{i} = 0$  \\ where the last implication comes from complementary slackness (8.6)
+    \item data points for which $a_{i} = C$: lie inside the margin and can either be correctly classified if $\xi_{i} \leq 1$ or misclassifed if $\xi_{i} > 1$
+\end{itemize}
+\newpage
 
 \end{document}
